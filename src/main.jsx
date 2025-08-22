@@ -7,7 +7,6 @@ import Home from "./components/Home.jsx";
 import About from "./components/About.jsx";
 import Contact from "./components/Contact.jsx";
 import Projects from "./components/Projects-nav.jsx";
-
 import TodoApp from "./projects/TodoApp/TodoApp.jsx";
 import AddTodo from "./projects/TodoApp/AddTodo.jsx";
 import RemainedTodos from "./projects/TodoApp/RemainedTodos.jsx";
