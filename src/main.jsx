@@ -34,9 +34,7 @@ const router = createBrowserRouter(
       </Route>
     </Route>
   ),
-  {
-    basename: isGitHubPages ? "/weCode-Project" : "/",
-  }
+  { basename: isGitHubPages ? "/weCode" : "/" }
 );
 
 createRoot(document.getElementById("root")).render(
