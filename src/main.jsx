@@ -19,6 +19,8 @@ import RemainedTodos from "./projects/TodoApp/RemainedTodos.jsx";
 import CompletedTodos from "./projects/TodoApp/CompletedTodos.jsx";
 import CurrencySwap from "./projects/CurrencySwap/CurrencySwap.jsx";
 import WeatherApp from "./projects/WeatherApp/WeatherApp.jsx";
+import CurrentWeather from "./projects/WeatherApp/CurrentWeather.jsx";
+import FourteenDayForecast from "./projects/WeatherApp/FourteenDayForecast.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,16 +28,25 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="about" element={<About />} />
       <Route path="contact" element={<Contact />} />
+
       <Route path="projects" element={<Projects />}>
         <Route index element={<Navigate to="weather" replace />} />
+
         <Route path="todo" element={<TodoApp />}>
           <Route index element={<Navigate to="add-todo" replace />} />
           <Route path="add-todo" element={<AddTodo />} />
           <Route path="remains" element={<RemainedTodos />} />
           <Route path="completes" element={<CompletedTodos />} />
         </Route>
+
+        <Route path="weather" element={<WeatherApp />}>
+          <Route index element={<Navigate to="current-weather" replace />} />
+
+          <Route path="current-weather" element={<CurrentWeather />} />
+          <Route path="forecast-14d" element={<FourteenDayForecast />} />
+        </Route>
+
         <Route path="currency" element={<CurrencySwap />} />
-        <Route path="weather" element={<WeatherApp />} />
       </Route>
     </Route>
   )

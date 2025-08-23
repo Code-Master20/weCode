@@ -1,7 +1,11 @@
+import { Outlet } from "react-router-dom";
+import WeatherHeader from "./wEATHERhEADER.JSX";
+
 function WeatherApp() {
   return (
     <>
-      <h1>Weather Application</h1>
+      <WeatherHeader />
+      <Outlet />
     </>
   );
 }
