@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useWeather } from "../../contexts/projectContexts/WeatherContext";
 
 function CurrentWeather() {
@@ -12,8 +13,25 @@ function CurrentWeather() {
     localisedData,
     setTwentyFourHourForecasting,
     twentyFourHourForecasting,
+    error,
+    setError,
+    overallDayForecasting,
+    setOverallDayForecasting,
   } = useWeather();
-  // console.log(currentDayAstros);
+
+  const [locationInput, setLocationInput] = useState("");
+
+  function handleInputLocation(e) {
+    e.preventDefault();
+    const trimmedInput = locationInput.trim();
+    if (trimmedInput && !error) {
+      setLocation(trimmedInput);
+      setLocationInput("");
+    } else if (error) {
+      setLocation((prev) => prev); // Revert to previous valid location
+      setLocationInput("");
+    }
+  }
 
   const currentDataIcon = currentWeather?.condition?.icon;
 
@@ -48,17 +66,40 @@ function CurrentWeather() {
     }
   }
 
-  // function rainingTracking(precip_in) {
-  //   if (!precip_in) return "No-rain";
-  //   return "rain -possible";
-  // }
+  function rainPossibilityTracker() {
+    const time = new Date();
+    const hours = time.getHours();
 
-  // function currentTimeTracker() {
-  //   const time = new Date();
-  //   const hours = time.getHours();
-  // }
+    if (
+      twentyFourHourForecasting[hours] &&
+      twentyFourHourForecasting[hours]?.will_it_rain === 1
+    ) {
+      return "Rain-possible";
+    } else if (
+      twentyFourHourForecasting[hours] &&
+      twentyFourHourForecasting[hours]?.will_it_snow !== 1
+    ) {
+      return "No-rain";
+    }
+  }
 
-  console.log(twentyFourHourForecasting[11]);
+  function snowPossibilityTracker() {
+    const time = new Date();
+    const hours = time.getHours();
+
+    if (
+      twentyFourHourForecasting[hours] &&
+      twentyFourHourForecasting[hours]?.will_it_snow === 1
+    ) {
+      return "Snow-possible";
+    } else if (
+      twentyFourHourForecasting[hours] &&
+      twentyFourHourForecasting[hours]?.will_it_snow !== 1
+    ) {
+      return "No-snow";
+    }
+  }
+
   return (
     <>
       {/* current data */}
@@ -75,6 +116,7 @@ function CurrentWeather() {
                 Feels Like:{currentWeather.feelslike_c}&deg;C
               </p>
             </div>
+
             <div className="flex flex-col items-center justify-between mb-10">
               <p className="self-end text-white font-bold">
                 {day_night_tracker(currentWeather.is_day)}
@@ -85,8 +127,31 @@ function CurrentWeather() {
               </p>
             </div>
           </div>
+          <div className="self-center w-full flex flex-col items-center gap-2 mt-2">
+            {error && (
+              <p className="text-red-500 font-semibold text-center">{error}</p>
+            )}
+            <form
+              onSubmit={handleInputLocation}
+              className="flex w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden"
+            >
+              <input
+                className="flex-1 bg-slate-100 p-3 text-lg outline-none focus:ring-2 focus:ring-blue-400 transition rounded-none"
+                type="text"
+                placeholder="Enter a location"
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+                required
+              />
+              <button
+                className="bg-blue-500 text-white px-6 py-2 text-lg font-semibold hover:bg-blue-700 transition"
+                type="submit"
+              >
+                Enter
+              </button>
+            </form>
+          </div>
 
-          {/* Other current data */}
           <div className="flex flex-col bg-slate-500 rounded-md p-4 gap-2">
             {/* humidity */}
             <div className="flex flex-row justify-between  bg-slate-600 p-3 rounded-md">
@@ -151,7 +216,15 @@ function CurrentWeather() {
                 Precipitation:
               </p>
               <p className="text-white text-2xl font-semibold">
-                {currentWeather.precip_mm}mm
+                {currentWeather.precip_mm} mm | {rainPossibilityTracker()}
+              </p>
+            </div>
+
+            {/* Snow Possibility */}
+            <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+              <p className="text-white text-2xl font-semibold">Snowy:</p>
+              <p className="text-white text-2xl font-semibold">
+                {currentWeather.precip_mm} mm | {snowPossibilityTracker()}
               </p>
             </div>
           </div>
