@@ -7,35 +7,35 @@ export default function WeatherProvider({ children }) {
   "current": {
     "last_updated_epoch": 1724452800,
     "last_updated": "2025-08-23 15:00",
-    "temp_c": 28.0,
+    "temp_c": 28.0, (done)
     "temp_f": 82.4,
     "is_day": 1,
     "condition": {
-      "text": "Partly cloudy",
-      "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+      "text": "Partly cloudy", (done)
+      "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png", (done)
       "code": 1003
     },
     "wind_mph": 6.9,
-    "wind_kph": 11.2, average wind speed
-    "wind_degree": 120,
-    "wind_dir": "ESE",
-    "pressure_mb": 1009,
-    "pressure_in": 29.8,
+    "wind_kph": 11.2, average wind speed  (done)
+    "wind_degree": 120, (done)
+    "wind_dir": "ESE", (done)
+    "pressure_mb": 1009, atmospheric pressure (done)
+    "pressure_in": 29.8, atmospheric pressure (done)
     "precip_mm": 0.0,
     "precip_in": 0.0,
-    "humidity": 74,
-    "cloud": 40,
-    "feelslike_c": 31.2,
+    "humidity": 74,   (done)
+    "cloud": 40,     cloud cover (done)
+    "feelslike_c": 31.2,  (done)
     "feelslike_f": 88.1,
-    "vis_km": 10.0,  how far ahead yu can clearly see
-    "vis_miles": 6.0, how far ahead yu can clearly see
-    "uv": 7.0,
+    "vis_km": 10.0,  how far ahead yu can clearly see (done)
+    "vis_miles": 6.0, how far ahead yu can clearly see (done)
+    "uv": 7.0,     UV Index (done)
     "gust_mph": 10.5, short-term maximum wind speed
     "gust_kph": 16.9
   }
     */
   const [currentWeather, setCurrentWeather] = useState({});
-  const [location, setLocation] = useState("Mahendraganj"); // Default location
+  const [location, setLocation] = useState("Bengaluru"); // Default location
 
   // sunrise, sunset, moonrise, moonset, moon_phase, moon_illumination, is_moon_up, is_sun_up
 
