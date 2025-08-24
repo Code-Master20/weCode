@@ -4,7 +4,7 @@ import { useWeather } from "../../contexts/projectContexts/WeatherContext.jsx";
 import { useEffect, useState } from "react";
 
 function WeatherApp() {
-  const { localisedData, setLocalisedData } = useWeather();
+  const { localisedData, setLocalisedData, currentWeather } = useWeather();
   const [formatedTime, setFormatedTime] = useState("");
 
   useEffect(() => {
@@ -36,6 +36,18 @@ function WeatherApp() {
     return `${Math.abs(lat).toFixed(2)}°${latDir}, ${Math.abs(lon).toFixed(
       2
     )}°${lonDir}`;
+  }
+
+  function dateFormatter(epoch) {
+    const date = new Date(epoch * 1000); // Convert epoch to milliseconds
+    let years = date.getFullYear();
+    let months = date.getMonth() + 1;
+    let days = date.getDate();
+
+    months = months < 10 ? "0" + months : months;
+    days = days < 10 ? "0" + days : days;
+
+    return `${years}-${months}-${days}`;
   }
 
   return (
@@ -82,6 +94,9 @@ function WeatherApp() {
 
           {/* Time Display - Adjusts padding and font size for mobile */}
           <div className="bg-white bg-opacity-20 p-1 md:p-3 rounded-lg mx-2 flex-shrink-0">
+            <p className="text-white font-bold text-xs md:text-xl whitespace-nowrap">
+              {dateFormatter(currentWeather.last_updated_epoch)}
+            </p>
             <p className="text-white font-bold text-xs md:text-xl whitespace-nowrap">
               {formatedTime}
             </p>

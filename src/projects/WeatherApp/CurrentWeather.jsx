@@ -4,7 +4,6 @@ import { useWeather } from "../../contexts/projectContexts/WeatherContext";
 function CurrentWeather() {
   const {
     currentWeather,
-    setCurrentWeather,
     currentDayAstros,
     setCurrentDayAstros,
     location,
@@ -21,6 +20,17 @@ function CurrentWeather() {
 
   const [locationInput, setLocationInput] = useState("");
 
+  const [isHourly, setIsHourly] = useState(false);
+  const [isOverallDay, setIsOverallDay] = useState(false);
+
+  function handleHourlyButton() {
+    setIsHourly((prev) => !prev);
+  }
+
+  function handleOverAllDayButton() {
+    setIsOverallDay((prev) => !prev);
+  }
+
   function handleInputLocation(e) {
     e.preventDefault();
     const trimmedInput = locationInput.trim();
@@ -32,6 +42,8 @@ function CurrentWeather() {
       setLocationInput("");
     }
   }
+
+  console.log("Current Weather:", currentWeather);
 
   const currentDataIcon = currentWeather?.condition?.icon;
 
@@ -100,6 +112,35 @@ function CurrentWeather() {
     }
   }
 
+  // UV Index State
+  function uvIndexState(uv) {
+    if (uv >= 0 && uv <= 2) return "Low";
+    if (uv >= 3 && uv <= 5) return "Moderate";
+    if (uv >= 6 && uv <= 7) return "High";
+    if (uv >= 8 && uv <= 10) return "Very High";
+    return "Extreme";
+  }
+
+  // Moon Phases
+  function moonPhases(phase) {
+    const moon = {
+      "New Moon": "🌑",
+      "Waxing Crescent": "🌒",
+      "First Quarter": "🌓",
+      "Waxing Gibbous": "🌔",
+      "Full Moon": "🌕",
+      "Waning Gibbous": "🌖",
+      "Last Quarter": "🌗",
+      "Waning Crescent": "🌘",
+    };
+    return moon[phase] ?? "🌙 Unknown";
+  }
+
+  function moonIllumination(illumination) {
+    const leftOverMoon = 100 - illumination;
+    return `${illumination}% lit | ${leftOverMoon}% dark`;
+  }
+
   return (
     <>
       {/* current data */}
@@ -109,6 +150,14 @@ function CurrentWeather() {
           {/* Top-Most temperature data */}
           <div className="flex flex-row items-center justify-between bg-slate-400 p-4 pt-0 rounded-md">
             <div className="flex flex-col items-center justify-between">
+              <div className="mt-[-30px] self-start flex gap-2">
+                <button className="bg-blue-500 text-white p-2 text-lg rounded-md font-semibold hover:bg-blue-800 transition active:bg-blue-950">
+                  hourly
+                </button>
+                <button className="text-white bg-blue-500 p-2 text-lg rounded-md font-semibold hover:bg-blue-800 transition active:bg-blue-950">
+                  overallday
+                </button>
+              </div>
               <p className=" text-3xl self-start font-bold text-white">
                 <span className="text-7xl">{currentWeather.temp_c}</span>&deg;C
               </p>
@@ -144,7 +193,7 @@ function CurrentWeather() {
                 required
               />
               <button
-                className="bg-blue-500 text-white px-6 py-2 text-lg font-semibold hover:bg-blue-700 transition"
+                className="bg-blue-500 text-white px-6 py-2 text-lg font-semibold hover:bg-blue-700 active:bg-blue-900 transition"
                 type="submit"
               >
                 Enter
@@ -181,7 +230,7 @@ function CurrentWeather() {
             <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
               <p className="text-white text-2xl font-semibold">UV Index:</p>
               <p className="text-white text-2xl font-semibold">
-                {currentWeather.uv}
+                {currentWeather.uv} | {uvIndexState(currentWeather.uv)}
               </p>
             </div>
 
@@ -232,15 +281,37 @@ function CurrentWeather() {
         </div>
 
         {/* Second Section */}
-        <div>
-          <p>sunrise</p>
-          <p>sunset</p>
-          <p>moonrise</p>
-          <p>moonset</p>
-          <p>moon phase</p>
-          <p>moon illumination</p>
-          <p>is sun up</p>
-          <p>is moon up</p>
+        <div className="flex flex-col gap-2 bg-slate-300 rounded-md p-2">
+          {/* Sun Astro */}
+          <div className="flex flex-row justify-between items-center  bg-slate-400 p-3 rounded-md">
+            <p className="text-2xl font-semibold text-white">Sun:</p>
+            <p className="text-xl font-semibold text-white">
+              R({currentDayAstros.sunrise}){"->"}S({currentDayAstros.sunset})
+            </p>
+          </div>
+
+          {/* Moon Astro */}
+          <div className="flex flex-row justify-between items-center  bg-slate-400 p-3 rounded-md">
+            <p className="text-2xl font-semibold text-white">Moon:</p>
+            <p className="text-xl font-semibold text-white">
+              R({currentDayAstros.moonrise}){"->"}S({currentDayAstros.moonset})
+            </p>
+          </div>
+
+          {/* Moon Phase */}
+          <div className="flex flex-row justify-between items-center  bg-slate-400 p-3 rounded-md">
+            <p className="text-2xl font-semibold text-white">Moon-Ph:</p>
+
+            <div className="flex flex-col items-center">
+              <p className="text-xl font-semibold text-white">
+                {currentDayAstros.moon_phase}(
+                {moonPhases(currentDayAstros.moon_phase)})
+              </p>
+              <p className="text-xl font-semibold text-white">
+                {moonIllumination(currentDayAstros.moon_illumination)}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </>

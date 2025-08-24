@@ -29,6 +29,7 @@ export default function WeatherProvider({ children }) {
         }
 
         const data = await response.json();
+
         setCurrentWeather(data.current);
         setCurrentDayAstros(data.forecast.forecastday[0].astro);
         setLocalisedData(data.location);
