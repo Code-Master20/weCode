@@ -225,7 +225,7 @@ function CurrentWeather() {
             <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
               <p className="text-white text-2xl font-semibold">Snowy:</p>
               <p className="text-white text-2xl font-semibold">
-                {currentWeather.precip_mm} mm | {snowPossibilityTracker()}
+                {snowPossibilityTracker()}
               </p>
             </div>
           </div>
