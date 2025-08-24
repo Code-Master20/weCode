@@ -216,7 +216,8 @@ function CurrentWeather() {
                 Precipitation:
               </p>
               <p className="text-white text-2xl font-semibold">
-                {currentWeather.precip_mm} mm | {rainPossibilityTracker()}
+                {currentWeather.precip_mm} mm |{" "}
+                <span className="text-sm">{rainPossibilityTracker()}</span>
               </p>
             </div>
 
