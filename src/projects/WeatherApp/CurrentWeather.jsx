@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useWeather } from "../../contexts/projectContexts/WeatherContext";
 import HourlyData from "./currentComponents/HourlyData";
 import OverallDayData from "./currentComponents/OverallDayData";
+import DayAstros from "./currentComponents/DayAstros";
 
 function CurrentWeather() {
   const {
     currentWeather,
-    currentDayAstros,
-    setCurrentDayAstros,
+
     location,
     setLocation,
     setLocalisedData,
@@ -16,8 +16,6 @@ function CurrentWeather() {
     twentyFourHourForecasting,
     error,
     setError,
-    overallDayForecasting,
-    setOverallDayForecasting,
   } = useWeather();
 
   const [locationInput, setLocationInput] = useState("");
@@ -114,6 +112,13 @@ function CurrentWeather() {
     }
   }
 
+  //this function returns current hours in 24-format
+  function hours() {
+    const date = new Date();
+    const hours = date.getHours();
+    return hours;
+  }
+
   // UV Index State
   function uvIndexState(uv) {
     if (uv >= 0 && uv <= 2) return "Low";
@@ -123,26 +128,7 @@ function CurrentWeather() {
     return "Extreme";
   }
 
-  // Moon Phases
-  function moonPhases(phase) {
-    const moon = {
-      "New Moon": "🌑",
-      "Waxing Crescent": "🌒",
-      "First Quarter": "🌓",
-      "Waxing Gibbous": "🌔",
-      "Full Moon": "🌕",
-      "Waning Gibbous": "🌖",
-      "Last Quarter": "🌗",
-      "Waning Crescent": "🌘",
-    };
-    return moon[phase] ?? "🌙 Unknown";
-  }
-
-  function moonIllumination(illumination) {
-    const leftOverMoon = 100 - illumination;
-    return `${illumination}% lit | ${leftOverMoon}% dark`;
-  }
-
+  console.log(currentWeather);
   return (
     <>
       {/* at very first isHourly=true and isOverallDay=false so HourlyData component will be rendered
@@ -154,7 +140,7 @@ function CurrentWeather() {
         <OverallDayData />
       ) : (
         // current data
-        <div className="border-4 flex flex-col border-blue-300 rounded-lg p-2 gap-3 width-[50%]">
+        <div className="border-4 flex flex-col border-blue-300 rounded-lg p-2 gap-3">
           {/* First Section */}
           <div className="flex flex-col gap-2">
             {/* Top-Most temperature data */}
@@ -177,17 +163,17 @@ function CurrentWeather() {
                   </button>
                 </div>
                 <p className=" text-3xl self-start font-bold text-white">
-                  <span className="text-7xl">{currentWeather.temp_c}</span>
+                  <span className="text-7xl">{currentWeather?.temp_c}</span>
                   &deg;C
                 </p>
                 <p className="text-xl text-white font-semibold pt-2">
-                  Feels Like:{currentWeather.feelslike_c}&deg;C
+                  Feels Like:{currentWeather?.feelslike_c}&deg;C
                 </p>
               </div>
 
               <div className="flex flex-col items-center justify-between mb-10">
                 <p className="self-end text-white font-bold">
-                  {day_night_tracker(currentWeather.is_day)}
+                  {day_night_tracker(currentWeather?.is_day)}
                 </p>
                 <img
                   className="size-28 h-28"
@@ -231,39 +217,43 @@ function CurrentWeather() {
               <div className="flex flex-row justify-between  bg-slate-600 p-3 rounded-md">
                 <p className="text-white text-2xl font-semibold">Humidity:</p>
                 <p className="text-white text-2xl font-semibold">
-                  {currentWeather.humidity}%
+                  {currentWeather?.humidity}%
                 </p>
               </div>
 
               {/* wind-speed */}
               <div className="flex flex-row justify-between items-center   bg-slate-600 p-3 rounded-md">
                 <p className="text-white text-2xl font-semibold">
-                  <span className="text-sm">Avg </span>Wind:
-                  {currentWeather.wind_degree}&deg;
+                  Wind<span className="text-sm">Avg </span>:
+                  {currentWeather?.wind_degree}&deg;
                 </p>
                 <p className="text-white  font-semibold ml-10 flex flex-col justify-center items-center">
-                  <span className="self-end text-2xl">
-                    {currentWeather.wind_kph} km/h
+                  <span className="self-end text-xl">
+                    {currentWeather?.wind_kph} km/h
                   </span>
                   <span className="text-xl font-normal">
-                    {getWindFlowDirection(currentWeather.wind_dir)}
+                    {getWindFlowDirection(currentWeather?.wind_dir)}
                   </span>
                 </p>
               </div>
 
               {/* UV Index */}
-              <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
-                <p className="text-white text-2xl font-semibold">UV Index:</p>
-                <p className="text-white text-2xl font-semibold">
-                  {currentWeather.uv} | {uvIndexState(currentWeather.uv)}
-                </p>
-              </div>
+              {currentWeather?.uv ? (
+                <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+                  <p className="text-white text-2xl font-semibold">UV Index:</p>
+                  <p className="text-white text-2xl font-semibold">
+                    {currentWeather?.uv} | {uvIndexState(currentWeather?.uv)}
+                  </p>
+                </div>
+              ) : (
+                <div className="hidden"></div>
+              )}
 
               {/* cloud cover */}
               <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
                 <p className="text-white text-2xl font-semibold">Cloudy:</p>
                 <p className="text-white text-2xl font-semibold">
-                  {currentWeather.cloud}%
+                  {currentWeather?.cloud}%
                 </p>
               </div>
 
@@ -273,8 +263,8 @@ function CurrentWeather() {
                   Atm pressure:
                 </p>
                 <p className="flex flex-col text-white text-xl font-semibold">
-                  <span>{currentWeather.pressure_mb} mb</span>
-                  <span> {currentWeather.pressure_in} inHg</span>
+                  <span>{currentWeather?.pressure_mb} mb</span>
+                  <span> {currentWeather?.pressure_in} inHg</span>
                 </p>
               </div>
 
@@ -282,65 +272,45 @@ function CurrentWeather() {
               <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
                 <p className="text-white text-2xl font-semibold">Visibility:</p>
                 <p className="text-white text-2xl font-semibold">
-                  {currentWeather.vis_km} km | {currentWeather.vis_miles} miles
+                  {currentWeather?.vis_km} km | {currentWeather?.vis_miles}{" "}
+                  miles
                 </p>
               </div>
 
               {/* Precipitation */}
-              <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
-                <p className="text-white text-2xl font-semibold">
-                  Precipitation:
-                </p>
-                <p className="text-white text-2xl font-semibold">
-                  {currentWeather.precip_mm} mm |{" "}
-                  <span className="text-sm">{rainPossibilityTracker()}</span>
-                </p>
-              </div>
+
+              {currentWeather?.precip_mm ? (
+                <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+                  <p className="text-white text-2xl font-semibold">
+                    Precipitation:
+                  </p>
+                  <p className="text-white text-xl font-semibold">
+                    {currentWeather?.precip_mm} mm |{" "}
+                    <span className="text-sm">{rainPossibilityTracker()}</span>
+                  </p>
+                </div>
+              ) : (
+                <div className="hidden"></div>
+              )}
 
               {/* Snow Possibility */}
-              <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
-                <p className="text-white text-2xl font-semibold">Snowy:</p>
-                <p className="text-white text-2xl font-semibold">
-                  {snowPossibilityTracker()}
-                </p>
-              </div>
+
+              {twentyFourHourForecasting &&
+              twentyFourHourForecasting[hours()]?.will_it_snow ? (
+                <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+                  <p className="text-white text-2xl font-semibold">Snowy:</p>
+                  <p className="text-white text-2xl font-semibold">
+                    {snowPossibilityTracker()}
+                  </p>
+                </div>
+              ) : (
+                <div className="hidden"></div>
+              )}
             </div>
           </div>
 
           {/* Second Section */}
-          <div className="flex flex-col gap-2 bg-slate-300 rounded-md p-2">
-            {/* Sun Astro */}
-            <div className="flex flex-row justify-between items-center  bg-slate-400 p-3 rounded-md">
-              <p className="text-2xl font-semibold text-white">Sun:</p>
-              <p className="text-xl font-semibold text-white">
-                R({currentDayAstros.sunrise}){"->"}S({currentDayAstros.sunset})
-              </p>
-            </div>
-
-            {/* Moon Astro */}
-            <div className="flex flex-row justify-between items-center  bg-slate-400 p-3 rounded-md">
-              <p className="text-2xl font-semibold text-white">Moon:</p>
-              <p className="text-xl font-semibold text-white">
-                R({currentDayAstros.moonrise}){"->"}S({currentDayAstros.moonset}
-                )
-              </p>
-            </div>
-
-            {/* Moon Phase */}
-            <div className="flex flex-row justify-between items-center  bg-slate-400 p-3 rounded-md">
-              <p className="text-2xl font-semibold text-white">Moon-Ph:</p>
-
-              <div className="flex flex-col items-center">
-                <p className="text-xl font-semibold text-white">
-                  {currentDayAstros.moon_phase}(
-                  {moonPhases(currentDayAstros.moon_phase)})
-                </p>
-                <p className="text-xl font-semibold text-white">
-                  {moonIllumination(currentDayAstros.moon_illumination)}
-                </p>
-              </div>
-            </div>
-          </div>
+          <DayAstros />
         </div>
       )}
     </>
