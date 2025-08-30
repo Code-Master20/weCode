@@ -8,12 +8,8 @@ function OverallDayData() {
   const navigate = useNavigate();
 
   const [isHourly, setIsHourly] = useState(false);
-  const {
-    overallDayForecasting,
-    currentWeather,
-    setOverallDayForecasting,
-    twentyFourHourForecasting,
-  } = useWeather();
+  const { overallDayForecasting, currentWeather, twentyFourHourForecasting } =
+    useWeather();
 
   //   //This state is to store 24 hour temperature data of the current day
   //   const [tempTwentyFourHour, setTempTwentyFourHour] = useState(
@@ -103,8 +99,6 @@ function OverallDayData() {
     setIsHourly(true);
   }
 
-  console.log(overallDayForecasting);
-
   const iconOfOverAllday = overallDayForecasting.condition.icon;
 
   return (
@@ -132,7 +126,7 @@ function OverallDayData() {
                     hourly
                   </button>
                 </div>
-                <p className="text-4xl font-bold text-white">
+                <p className="text-3xl font-bold text-white">
                   {minTemp(currentWeather?.temp_c)}&deg;C-
                   {maxTemp(currentWeather?.temp_c)}&deg;C
                 </p>
@@ -154,7 +148,7 @@ function OverallDayData() {
                   {currentWeather.is_day ? "Day" : "Night"}
                 </p>
                 <img className="size-32" src={iconOfOverAllday} alt="icon" />
-                <p className="text-2xl font-bold text-white">
+                <p className="text-lg font-semibold text-white">
                   {overallDayForecasting.condition.text}
                 </p>
               </div>

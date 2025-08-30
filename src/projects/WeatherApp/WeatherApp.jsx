@@ -94,7 +94,7 @@ function WeatherApp() {
 
           {/* Time Display - Adjusts padding and font size for mobile */}
           <div className="bg-white bg-opacity-20 p-1 md:p-3 rounded-lg mx-2 flex-shrink-0">
-            <p className="text-white font-bold text-xs md:text-xl whitespace-nowrap">
+            <p className="text-white font-bold text-xs md:text-xl whitespace-nowrap text-center">
               {dateFormatter(currentWeather.last_updated_epoch)}
             </p>
             <p className="text-white font-bold text-xs md:text-xl whitespace-nowrap">

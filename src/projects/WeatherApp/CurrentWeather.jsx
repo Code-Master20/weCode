@@ -128,7 +128,6 @@ function CurrentWeather() {
     return "Extreme";
   }
 
-  console.log(currentWeather);
   return (
     <>
       {/* at very first isHourly=true and isOverallDay=false so HourlyData component will be rendered
