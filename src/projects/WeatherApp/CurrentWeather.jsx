@@ -328,19 +328,19 @@ function CurrentWeather() {
 
         <div
           className="border-4 flex flex-col border-blue-300 rounded-lg p-2 gap-3 xl:flex xl:flex-row xl:mt-28 xl:max-w-full xl:justify-between xl:border-none 
-        lg:flex lg:flex-row lg:mt-24 lg:max-w-full lg:justify-between lg:border-none
+        lg:flex lg:flex-row lg:mt-24 lg:max-w-full lg:justify-between lg:border-none md:flex md:flex-row md:mt-24 md:max-w-full md:justify-between md:border-none
         "
         >
           {/* First Section */}
           <div
             className="flex flex-col gap-2 xl:flex xl:flex-row xl:gap-3 xl:w-[67%] 
-          lg:flex lg:flex-row lg:gap-2 lg:w-[67%]
+          lg:flex lg:flex-row lg:gap-2 lg:w-[67%] md:flex md:flex-row md:gap-1 md:w-[67%]
           "
           >
             {/* Top-Most temperature data */}
             <div
               className="flex flex-row items-center justify-between p-4  rounded-md xl:flex xl:flex-col xl:w-[30rem] pt-8 xl:shadow-2xl
-              lg:flex lg:flex-col lg:w-[22rem] lg:shadow-lg
+              lg:flex lg:flex-col lg:w-[22rem] lg:shadow-lg md:flex md:flex-col md:w-[16rem] md:shadow-lg 
             
             "
               style={{
@@ -355,7 +355,7 @@ function CurrentWeather() {
                 {/*Hourly and overallday buttons */}
                 <div
                   className="mt-[-30px] self-start flex gap-2 xl:absolute xl:top-80 xl:z-30
-                lg:absolute lg:top-80 lg:z-30
+                lg:absolute lg:top-80 lg:z-30 md:absolute md:top-80 md:z-30 md:
                 "
                 >
                   <button
@@ -398,6 +398,7 @@ function CurrentWeather() {
                  xl:text-white xl:bg-purple-500 xl:p-2 xl:w-32 xl:text-center xl:rounded-lg
                   xl:shadow-2xl xl:text-3xl xl:cursor-default
                   lg:absolute lg:top-72 lg:right-10 lg:z-30 lg:text-white lg:bg-purple-500 lg:w-28 lg:text-center lg:rounded-lg lg:p-2
+                  md:absolute md:top-72 md:right-8 md:z-30 md:text-white md:bg-purple-500 md:w-28 md:text-center md:rounded-lg md:p-2
                   "
                 >
                   {day_night_tracker(currentWeather?.is_day)}
@@ -418,7 +419,7 @@ function CurrentWeather() {
             {/* Form for input of location */}
             <div
               className="self-center w-full flex flex-col items-center gap-2 mt-2 xl:absolute xl:top-72 xl:w-full
-            lg:absolute lg:top-72 lg:w-full
+            lg:absolute lg:top-72 lg:w-full md:absolute md:top-72 md:w-[20rem] md:ml-[15rem]
             "
             >
               {error && (
@@ -428,10 +429,10 @@ function CurrentWeather() {
               )}
               <form
                 onSubmit={handleInputLocation}
-                className="flex w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden xl:max-w-3xl"
+                className="flex w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden xl:max-w-3xl md:max-w-xl md:h-9"
               >
                 <input
-                  className="flex-1 bg-slate-100 p-3 text-lg outline-none focus:ring-2 focus:ring-blue-400 transition rounded-none"
+                  className="flex-1 bg-slate-100 p-3 text-lg outline-none focus:ring-2 focus:ring-blue-400 transition rounded-none md:text-sm"
                   type="text"
                   placeholder="Enter a location"
                   value={locationInput}
@@ -439,7 +440,7 @@ function CurrentWeather() {
                   required
                 />
                 <button
-                  className="bg-blue-500 text-white px-6 py-2 text-lg font-semibold hover:bg-blue-700 active:bg-blue-900 transition"
+                  className="bg-blue-500 text-white px-6 py-2 text-lg font-semibold hover:bg-blue-700 active:bg-blue-900 transition md:pt-2 md:text-sm"
                   type="submit"
                 >
                   Enter
@@ -447,10 +448,10 @@ function CurrentWeather() {
               </form>
             </div>
 
-            <div className="flex flex-col bg-slate-500 rounded-md p-4 gap-2 xl:w-[33rem] lg:w-[24rem]">
+            <div className="flex flex-col bg-slate-200 shadow-lg rounded-md p-4 gap-2  xl:w-[33rem] lg:w-[24rem] md:w-[17rem]">
               {/* humidity */}
               <div
-                className="flex flex-row justify-between  bg-slate-600 p-3 rounded-md"
+                className="flex flex-row justify-between shadow-lg p-3 rounded-md"
                 style={{
                   backgroundImage: getHumidityBackground(
                     currentWeather?.humidity
@@ -459,32 +460,35 @@ function CurrentWeather() {
                   backgroundPosition: "center",
                 }}
               >
-                <p className="text-white text-2xl font-semibold lg:text-xl">
+                <p className="text-white text-2xl font-semibold lg:text-xl md:text-sm">
                   Humidity:
                 </p>
-                <p className="text-white text-2xl font-semibold lg:text-lg">
+                <p className="text-white text-2xl font-semibold lg:text-lg md:text-sm">
                   {currentWeather?.humidity}%
                 </p>
               </div>
 
               {/* wind-speed */}
               <div
-                className="flex flex-row justify-between items-center   bg-slate-600 p-3 rounded-md"
+                className="flex flex-row justify-between items-center p-3 shadow-xl rounded-md md:pt-1 md:pb-1"
                 style={{
                   backgroundImage: getWindBackground(currentWeather?.wind_kph),
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               >
-                <p className="text-white text-2xl font-semibold lg:text-xl">
-                  Wind<span className="text-sm lg:text-xs">Avg </span>:
-                  {currentWeather?.wind_degree}&deg;
+                <p className="text-white text-2xl font-semibold lg:text-xl md:text-sm">
+                  Wind
+                  <span className="text-sm lg:text-xs md:text-[0.5rem]">
+                    Avg{" "}
+                  </span>
+                  :{currentWeather?.wind_degree}&deg;
                 </p>
                 <p className="text-white  font-semibold ml-10 flex flex-col justify-center items-center">
-                  <span className="self-end text-xl lg:text-xl">
+                  <span className="self-end text-xl lg:text-xl md:text-sm">
                     {currentWeather?.wind_kph} km/h
                   </span>
-                  <span className="text-xl font-normal lg:text-xl">
+                  <span className="text-xl font-normal lg:text-xl md:text-xs">
                     {getWindFlowDirection(currentWeather?.wind_dir)}
                   </span>
                 </p>
@@ -493,7 +497,7 @@ function CurrentWeather() {
               {/* UV Index */}
               {currentWeather?.uv ? (
                 <div
-                  className="flex flex-row justify-between items-center p-3 rounded-md"
+                  className="flex flex-row justify-between items-center p-3 shadow-xl rounded-md"
                   style={{
                     background: getUVBackground(currentWeather?.uv),
                     padding: "20px",
@@ -501,10 +505,10 @@ function CurrentWeather() {
                     color: "white",
                   }}
                 >
-                  <p className="text-white text-2xl font-semibold lg:text-xl">
+                  <p className="text-white text-2xl font-semibold lg:text-xl md:text-sm">
                     UV Index:
                   </p>
-                  <p className="text-white text-2xl font-semibold lg:text-xl">
+                  <p className="text-white text-2xl font-semibold lg:text-xl md:text-xs">
                     {currentWeather?.uv} | {uvIndexState(currentWeather?.uv)}
                   </p>
                 </div>
@@ -514,36 +518,36 @@ function CurrentWeather() {
 
               {/* cloud cover */}
               <div
-                className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md"
+                className="flex flex-row justify-between items-center shadow-xl p-3 rounded-md md:pt-2 md:pb -2"
                 style={{
                   background: getCloudBackground(currentWeather?.cloud),
-                  padding: "20px",
-                  borderRadius: "12px",
                   color: "white",
                 }}
               >
-                <p className="text-white text-2xl font-semibold">Cloudy:</p>
-                <p className="text-white text-2xl font-semibold lg:text-lg">
+                <p className="text-white text-2xl font-semibold md:text-sm">
+                  Cloudy:
+                </p>
+                <p className="text-white text-2xl font-semibold lg:text-lg md:text-sm">
                   {currentWeather?.cloud}%
                 </p>
               </div>
 
               {/* atmospheric pressure */}
               <div
-                className="flex flex-row justify-between items-center p-3 rounded-md"
+                className="flex flex-row justify-between items-center p-3 shadow-xl rounded-md md:pt-1 md:pb-1"
                 style={{
                   background: getPressureBackground(
                     currentWeather?.pressure_mb
                   ),
-                  padding: "20px",
-                  borderRadius: "12px",
+                  // padding: "20px",
+                  // borderRadius: "12px",
                   color: "white",
                 }}
               >
-                <p className="text-white text-2xl font-semibold lg:text-xl">
+                <p className="text-white text-2xl font-semibold lg:text-xl md:text-sm">
                   Atm pressure:
                 </p>
-                <p className="flex flex-col text-white text-xl font-semibold lg:text-xl">
+                <p className="flex flex-col text-white text-xl font-semibold lg:text-xl md:text-xs">
                   <span>{currentWeather?.pressure_mb} mb</span>
                   <span> {currentWeather?.pressure_in} inHg</span>
                 </p>
@@ -551,18 +555,16 @@ function CurrentWeather() {
 
               {/* Visibility */}
               <div
-                className="flex flex-row justify-between items-center p-3 rounded-md"
+                className="flex flex-row justify-between items-center p-3 shadow-xl rounded-md"
                 style={{
                   background: getVisibilityBackground(currentWeather?.vis_km),
-                  padding: "20px",
-                  borderRadius: "12px",
                   color: "white",
                 }}
               >
-                <p className="text-white text-2xl font-semibold lg:text-xl">
+                <p className="text-white text-2xl font-semibold lg:text-xl md:text-sm">
                   Visibility:
                 </p>
-                <p className="text-white text-2xl font-semibold lg:text-xl">
+                <p className="text-white text-2xl font-semibold lg:text-xl md:text-sm">
                   {currentWeather?.vis_km} km | {currentWeather?.vis_miles}{" "}
                   miles
                 </p>
@@ -572,27 +574,25 @@ function CurrentWeather() {
 
               {currentWeather?.precip_mm ? (
                 <div
-                  className="flex flex-row justify-between items-center p-3 rounded-md"
+                  className="flex flex-row justify-between items-center p-3 shadow-xl rounded-md md:pt-1 md:pb-1"
                   style={{
                     background: getPrecipitationBackground(
                       currentWeather?.precip_mm
                     ),
-                    padding: "20px",
-                    borderRadius: "12px",
                     color: "white",
                   }}
                 >
-                  <p className="text-white text-2xl font-semibold xl:text-xl xl:font-bold lg:text-xl lg:font-bold">
+                  <p className="text-white text-2xl font-semibold xl:text-xl xl:font-bold lg:text-xl lg:font-bold md:text-sm">
                     Precipitation:
                   </p>
                   <p
-                    className="text-white text-xl font-semibold xl:font-bold xl:text-lg xl:flex xl:flex-col xl:justify-between xl:items-center 
-                  lg:flex lg:flex-col lg:justify-between lg:items-center"
+                    className="text-white flex  text-xl flex-col justify-between items-center font-semibold xl:font-bold xl:text-lg xl:flex xl:flex-col xl:justify-between xl:items-center 
+                  lg:flex lg:flex-col lg:justify-between lg:items-center md:text-sm "
                   >
-                    <span className="lg:text-xl">
+                    <span className="lg:text-xl self-end">
                       {currentWeather?.precip_mm} mm{" "}
                     </span>
-                    <span className="text-sm lg:text-xl">
+                    <span className="text-sm lg:text-xl md:text-xs ">
                       {rainPossibilityTracker()}
                     </span>
                   </p>
