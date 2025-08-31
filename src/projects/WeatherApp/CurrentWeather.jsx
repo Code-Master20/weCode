@@ -118,12 +118,12 @@ function CurrentWeather() {
       twentyFourHourForecasting[hours] &&
       twentyFourHourForecasting[hours]?.will_it_snow === 1
     ) {
-      return "Snow-possible";
+      return "❄️ Snow-possible";
     } else if (
       twentyFourHourForecasting[hours] &&
       twentyFourHourForecasting[hours]?.will_it_snow !== 1
     ) {
-      return "No-snow";
+      return "☀️ No-snow";
     }
   }
 
@@ -174,6 +174,7 @@ function CurrentWeather() {
     }
   }
 
+  // background gradient for different temperatures
   function getTemperatureBackground(temp) {
     if (temp < 10) {
       return "linear-gradient(to top, #00c6fb, #005bea)"; // cold blue
@@ -181,6 +182,135 @@ function CurrentWeather() {
       return "linear-gradient(to top, #fbc2eb, #a6c1ee)"; // mild pink-purple
     } else {
       return "linear-gradient(to top, #fddb92, #d1fdff)"; // hot yellow-orange
+    }
+  }
+
+  // background gradient for different uv indices
+  function getUVBackground(uv) {
+    if (uv <= 2) {
+      // Low UV (safe)
+      return "linear-gradient(to top, #a8edea, #fed6e3)";
+      // soft blue-pink
+    } else if (uv <= 5) {
+      // Moderate UV
+      return "linear-gradient(to top, #fceabb, #f8b500)";
+      // yellow-orange
+    } else if (uv <= 7) {
+      // High UV
+      return "linear-gradient(to top, #f6d365, #fda085)";
+      // bright orange-red
+    } else if (uv <= 10) {
+      // Very High UV
+      return "linear-gradient(to top, #f5576c, #f093fb)";
+      // pink-red-purple
+    } else {
+      // Extreme UV
+      return "linear-gradient(to top, #8e2de2, #4a00e0)";
+      // deep purple
+    }
+  }
+
+  // background gradient for different cloud percentages
+  function getCloudBackground(cloud) {
+    if (cloud <= 10) {
+      // Clear sky
+      return "linear-gradient(to top, #56ccf2, #2f80ed)";
+      // bright blue sky
+    } else if (cloud <= 40) {
+      // Few clouds
+      return "linear-gradient(to top, #a1c4fd, #c2e9fb)";
+      // soft blue with light white
+    } else if (cloud <= 70) {
+      // Partly cloudy
+      return "linear-gradient(to top, #d7d2cc, #304352)";
+      // grayish-blue
+    } else if (cloud <= 90) {
+      // Mostly cloudy
+      return "linear-gradient(to top, #757f9a, #d7dde8)";
+      // strong gray tones
+    } else {
+      // Overcast (100%)
+      return "linear-gradient(to top, #232526, #414345)";
+      // dark gray stormy
+    }
+  }
+
+  // background gradient for different atmospheric pressures
+  function getPressureBackground(pressure) {
+    if (pressure < 990) {
+      // Very Low Pressure - stormy
+      return "linear-gradient(to top, #0f2027, #203a43, #2c5364)";
+      // dark bluish storm
+    } else if (pressure < 1005) {
+      // Low Pressure - cloudy/rainy
+      return "linear-gradient(to top, #757f9a, #d7dde8)";
+      // gray tones
+    } else if (pressure <= 1020) {
+      // Normal Pressure - balanced
+      return "linear-gradient(to top, #a1c4fd, #c2e9fb)";
+      // calm blue sky
+    } else if (pressure <= 1035) {
+      // High Pressure - clear & sunny
+      return "linear-gradient(to top, #56ccf2, #2f80ed)";
+      // bright clear blue
+    } else {
+      // Very High Pressure - dry, hot
+      return "linear-gradient(to top, #f2994a, #f2c94c)";
+      // golden/yellow sunny tones
+    }
+  }
+
+  function getVisibilityBackground(visibility) {
+    if (visibility < 1) {
+      // Very low visibility - dense fog/snowstorm
+      return "linear-gradient(to top, #434343, #000000)";
+      // almost black/gray
+    } else if (visibility < 4) {
+      // Low visibility - fog/rain
+      return "linear-gradient(to top, #606c88, #3f4c6b)";
+      // dark bluish fog
+    } else if (visibility < 10) {
+      // Medium visibility - haze
+      return "linear-gradient(to top, #bdc3c7, #2c3e50)";
+      // hazy gray sky
+    } else {
+      // High visibility - clear
+      return "linear-gradient(to top, #56ccf2, #2f80ed)";
+      // bright clear sky
+    }
+  }
+
+  function getPrecipitationBackground(precipMM) {
+    if (precipMM === 0) {
+      // No rain
+      return "linear-gradient(to top, #56ccf2, #2f80ed)";
+      // clear blue sky
+    } else if (precipMM <= 2.5) {
+      // Light rain
+      return "linear-gradient(to top, #89f7fe, #66a6ff)";
+      // light blue / gentle rain
+    } else if (precipMM <= 7.5) {
+      // Moderate rain
+      return "linear-gradient(to top, #4facfe, #00f2fe)";
+      // medium blue
+    } else if (precipMM <= 50) {
+      // Heavy rain
+      return "linear-gradient(to top, #667db6, #0082c8, #0082c8, #667db6)";
+      // darker rainy blue
+    } else {
+      // Extreme rainfall
+      return "linear-gradient(to top, #373B44, #4286f4)";
+      // stormy dark gradient
+    }
+  }
+
+  function getSnowBackground(snowFlag) {
+    if (snowFlag === 1) {
+      return "linear-gradient(to top, #c9d6ff, #e2e2e2)";
+      // snowy sky (grey-blue-white)
+    } else {
+      return "linear-gradient(to top, #83a4d4, #b6fbff)";
+      // clear cold sky
     }
   }
 
@@ -360,7 +490,15 @@ function CurrentWeather() {
 
               {/* UV Index */}
               {currentWeather?.uv ? (
-                <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+                <div
+                  className="flex flex-row justify-between items-center p-3 rounded-md"
+                  style={{
+                    background: getUVBackground(currentWeather?.uv),
+                    padding: "20px",
+                    borderRadius: "12px",
+                    color: "white",
+                  }}
+                >
                   <p className="text-white text-2xl font-semibold">UV Index:</p>
                   <p className="text-white text-2xl font-semibold lg:text-lg">
                     {currentWeather?.uv} | {uvIndexState(currentWeather?.uv)}
@@ -371,7 +509,15 @@ function CurrentWeather() {
               )}
 
               {/* cloud cover */}
-              <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+              <div
+                className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md"
+                style={{
+                  background: getCloudBackground(currentWeather?.cloud),
+                  padding: "20px",
+                  borderRadius: "12px",
+                  color: "white",
+                }}
+              >
                 <p className="text-white text-2xl font-semibold">Cloudy:</p>
                 <p className="text-white text-2xl font-semibold lg:text-lg">
                   {currentWeather?.cloud}%
@@ -379,7 +525,17 @@ function CurrentWeather() {
               </div>
 
               {/* atmospheric pressure */}
-              <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+              <div
+                className="flex flex-row justify-between items-center p-3 rounded-md"
+                style={{
+                  background: getPressureBackground(
+                    currentWeather?.pressure_mb
+                  ),
+                  padding: "20px",
+                  borderRadius: "12px",
+                  color: "white",
+                }}
+              >
                 <p className="text-white text-2xl font-semibold lg:text-lg">
                   Atm pressure:
                 </p>
@@ -390,7 +546,15 @@ function CurrentWeather() {
               </div>
 
               {/* Visibility */}
-              <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+              <div
+                className="flex flex-row justify-between items-center p-3 rounded-md"
+                style={{
+                  background: getVisibilityBackground(currentWeather?.vis_km),
+                  padding: "20px",
+                  borderRadius: "12px",
+                  color: "white",
+                }}
+              >
                 <p className="text-white text-2xl font-semibold lg:text-lg">
                   Visibility:
                 </p>
@@ -403,7 +567,17 @@ function CurrentWeather() {
               {/* Precipitation */}
 
               {currentWeather?.precip_mm ? (
-                <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+                <div
+                  className="flex flex-row justify-between items-center p-3 rounded-md"
+                  style={{
+                    background: getPrecipitationBackground(
+                      currentWeather?.precip_mm
+                    ),
+                    padding: "20px",
+                    borderRadius: "12px",
+                    color: "white",
+                  }}
+                >
                   <p className="text-white text-2xl font-semibold">
                     Precipitation:
                   </p>
@@ -420,7 +594,17 @@ function CurrentWeather() {
 
               {twentyFourHourForecasting &&
               twentyFourHourForecasting[hours()]?.will_it_snow ? (
-                <div className="flex flex-row justify-between items-center  bg-slate-600 p-3 rounded-md">
+                <div
+                  className="flex flex-row justify-between items-center p-3 rounded-md"
+                  style={{
+                    background: getSnowBackground(
+                      twentyFourHourForecasting[hours]
+                    )?.will_it_snow,
+                    padding: "20px",
+                    borderRadius: "12px",
+                    color: "white",
+                  }}
+                >
                   <p className="text-white text-2xl font-semibold">Snowy:</p>
                   <p className="text-white text-2xl font-semibold">
                     {snowPossibilityTracker()}
