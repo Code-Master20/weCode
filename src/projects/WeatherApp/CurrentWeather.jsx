@@ -447,7 +447,7 @@ function CurrentWeather() {
               </form>
             </div>
 
-            <div className="flex flex-col bg-slate-500 rounded-md p-4 gap-2 xl:w-[33rem]">
+            <div className="flex flex-col bg-slate-500 rounded-md p-4 gap-2 xl:w-[33rem] lg:w-[24rem]">
               {/* humidity */}
               <div
                 className="flex flex-row justify-between  bg-slate-600 p-3 rounded-md"
@@ -459,7 +459,9 @@ function CurrentWeather() {
                   backgroundPosition: "center",
                 }}
               >
-                <p className="text-white text-2xl font-semibold">Humidity:</p>
+                <p className="text-white text-2xl font-semibold lg:text-xl">
+                  Humidity:
+                </p>
                 <p className="text-white text-2xl font-semibold lg:text-lg">
                   {currentWeather?.humidity}%
                 </p>
@@ -474,15 +476,15 @@ function CurrentWeather() {
                   backgroundPosition: "center",
                 }}
               >
-                <p className="text-white text-2xl font-semibold lg:text-lg">
-                  Wind<span className="text-sm">Avg </span>:
+                <p className="text-white text-2xl font-semibold lg:text-xl">
+                  Wind<span className="text-sm lg:text-xs">Avg </span>:
                   {currentWeather?.wind_degree}&deg;
                 </p>
                 <p className="text-white  font-semibold ml-10 flex flex-col justify-center items-center">
-                  <span className="self-end text-xl lg:text-lg">
+                  <span className="self-end text-xl lg:text-xl">
                     {currentWeather?.wind_kph} km/h
                   </span>
-                  <span className="text-xl font-normal lg:text-lg">
+                  <span className="text-xl font-normal lg:text-xl">
                     {getWindFlowDirection(currentWeather?.wind_dir)}
                   </span>
                 </p>
@@ -499,8 +501,10 @@ function CurrentWeather() {
                     color: "white",
                   }}
                 >
-                  <p className="text-white text-2xl font-semibold">UV Index:</p>
-                  <p className="text-white text-2xl font-semibold lg:text-lg">
+                  <p className="text-white text-2xl font-semibold lg:text-xl">
+                    UV Index:
+                  </p>
+                  <p className="text-white text-2xl font-semibold lg:text-xl">
                     {currentWeather?.uv} | {uvIndexState(currentWeather?.uv)}
                   </p>
                 </div>
@@ -536,10 +540,10 @@ function CurrentWeather() {
                   color: "white",
                 }}
               >
-                <p className="text-white text-2xl font-semibold lg:text-lg">
+                <p className="text-white text-2xl font-semibold lg:text-xl">
                   Atm pressure:
                 </p>
-                <p className="flex flex-col text-white text-xl font-semibold lg:text-lg">
+                <p className="flex flex-col text-white text-xl font-semibold lg:text-xl">
                   <span>{currentWeather?.pressure_mb} mb</span>
                   <span> {currentWeather?.pressure_in} inHg</span>
                 </p>
@@ -555,10 +559,10 @@ function CurrentWeather() {
                   color: "white",
                 }}
               >
-                <p className="text-white text-2xl font-semibold lg:text-lg">
+                <p className="text-white text-2xl font-semibold lg:text-xl">
                   Visibility:
                 </p>
-                <p className="text-white text-2xl font-semibold lg:text-lg">
+                <p className="text-white text-2xl font-semibold lg:text-xl">
                   {currentWeather?.vis_km} km | {currentWeather?.vis_miles}{" "}
                   miles
                 </p>
@@ -578,12 +582,19 @@ function CurrentWeather() {
                     color: "white",
                   }}
                 >
-                  <p className="text-white text-2xl font-semibold">
+                  <p className="text-white text-2xl font-semibold xl:text-xl xl:font-bold lg:text-xl lg:font-bold">
                     Precipitation:
                   </p>
-                  <p className="text-white text-xl font-semibold">
-                    {currentWeather?.precip_mm} mm |{" "}
-                    <span className="text-sm">{rainPossibilityTracker()}</span>
+                  <p
+                    className="text-white text-xl font-semibold xl:font-bold xl:text-lg xl:flex xl:flex-col xl:justify-between xl:items-center 
+                  lg:flex lg:flex-col lg:justify-between lg:items-center"
+                  >
+                    <span className="lg:text-xl">
+                      {currentWeather?.precip_mm} mm{" "}
+                    </span>
+                    <span className="text-sm lg:text-xl">
+                      {rainPossibilityTracker()}
+                    </span>
                   </p>
                 </div>
               ) : (
@@ -605,8 +616,10 @@ function CurrentWeather() {
                     color: "white",
                   }}
                 >
-                  <p className="text-white text-2xl font-semibold">Snowy:</p>
-                  <p className="text-white text-2xl font-semibold">
+                  <p className="text-white text-2xl font-semibold lg:text-xl">
+                    Snowy:
+                  </p>
+                  <p className="text-white text-2xl font-semibold lg:text-xl">
                     {snowPossibilityTracker()}
                   </p>
                 </div>
