@@ -18,21 +18,6 @@ function CurrentWeather() {
     setError,
   } = useWeather();
 
-  // screen-width tracker
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth); // update state with new width
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   const [locationInput, setLocationInput] = useState("");
 
   const [isHourly, setIsHourly] = useState(false);
@@ -398,7 +383,7 @@ function CurrentWeather() {
                  xl:text-white xl:bg-purple-500 xl:p-2 xl:w-32 xl:text-center xl:rounded-lg
                   xl:shadow-2xl xl:text-3xl xl:cursor-default
                   lg:absolute lg:top-72 lg:right-10 lg:z-30 lg:text-white lg:bg-purple-500 lg:w-28 lg:text-center lg:rounded-lg lg:p-2
-                  md:absolute md:top-72 md:right-8 md:z-30 md:text-white md:bg-purple-500 md:w-28 md:text-center md:rounded-lg md:p-2
+                  md:absolute md:top-72 md:right-3 md:z-30 md:text-white md:bg-purple-500 md:w-28 md:text-center md:rounded-lg md:p-2
                   "
                 >
                   {day_night_tracker(currentWeather?.is_day)}
@@ -418,8 +403,8 @@ function CurrentWeather() {
 
             {/* Form for input of location */}
             <div
-              className="self-center w-full flex flex-col items-center gap-2 mt-2 xl:absolute xl:top-72 xl:w-full
-            lg:absolute lg:top-72 lg:w-full md:absolute md:top-72 md:w-[20rem] md:ml-[15rem]
+              className="self-center w-full flex flex-col items-center gap-2 mt-2 xl:absolute xl:top-72 xl:w-full xl:ml-9
+            lg:absolute lg:top-72 lg:w-full lg:ml-8 md:absolute md:top-72 md:w-[20rem] md:ml-[19rem]
             "
             >
               {error && (
@@ -429,7 +414,7 @@ function CurrentWeather() {
               )}
               <form
                 onSubmit={handleInputLocation}
-                className="flex w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden xl:max-w-3xl md:max-w-xl md:h-9"
+                className="flex w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden xl:max-w-3xl xl:h-12 lg:max-w-xl lg:h-9 md:max-w-xl md:h-9"
               >
                 <input
                   className="flex-1 bg-slate-100 p-3 text-lg outline-none focus:ring-2 focus:ring-blue-400 transition rounded-none md:text-sm"

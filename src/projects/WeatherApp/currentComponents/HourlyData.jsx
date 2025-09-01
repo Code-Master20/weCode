@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useWeather } from "../../../contexts/projectContexts/WeatherContext";
 import { useNavigate } from "react-router-dom";
 import OverallDayData from "./OverallDayData";
+import DayAstros from "./DayAstros";
 
 function HourlyData() {
   const { twentyFourHourForecasting } = useWeather();
@@ -30,8 +31,11 @@ function HourlyData() {
 
   let nowEpoch = getCurrentHourEpoch();
 
-  let nextHourIndex =
-    twentyFourHourForecasting?.findIndex((h) => h.time_epoch > nowEpoch) || 0;
+  let nextHourIndex = twentyFourHourForecasting?.findIndex(
+    (h) => h.time_epoch > nowEpoch
+  );
+
+  nextHourIndex = nextHourIndex < 0 ? 0 : nextHourIndex;
 
   const [indexOfHour, setIndexOfHour] = useState(nextHourIndex);
 
@@ -125,19 +129,77 @@ function HourlyData() {
     return map[dir] ? `${map[dir]}` : "Direction unknown";
   }
 
+  // screen-width tracker
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth); // update state with new width
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  function widthControlxl(width) {
+    if (width <= 1396 && width >= 1390) {
+      return "xl:min-w-[26rem]";
+    } else if (width <= 1389 && width >= 1350) {
+      return "xl:min-w-[24rem]";
+    } else {
+      return "xl:min-w-[21.8rem]";
+    }
+  }
+
+  function widthControllg(width) {
+    if (width <= 1280 && width >= 1270) {
+      return "lg:min-w-[20.8rem]";
+    } else if (width <= 1269.5 && width >= 1260) {
+      return "lg:min-w-[20rem]";
+    } else if (width <= 1259.6 && width >= 1250) {
+      return "lg:min-w-[19rem]";
+    } else {
+      return "lg:min-w-[17rem]";
+    }
+  }
+
+  // conditianal shadow for temperatures
+
+  function shadow_for_temp(temp) {
+    if (temp <= 50 && temp >= 40) {
+      return "shadow-red-700";
+    } else if (temp <= 39.99 && temp >= 28) {
+      return "shadow-red-400";
+    } else if (temp <= 27.999 && temp >= 21) {
+      return "shadow-red-300";
+    } else {
+      return "shadow-gray-400";
+    }
+  }
+
   return (
     <>
       {!isOverallDay ? (
-        <div className="flex flex-col bg-gradient-to-b from-blue-500 via-sky-400 to-slate-200 rounded-2xl shadow-lg p-4 w-full mx-auto relative overflow-hidden">
-          {/* Floating Day/Night Badge */}
-          <div className="absolute top-16 right-3 bg-orange-300 text-gray-800 font-bold rounded-lg shadow-md px-3 py-1 text-sm">
-            {HourlyData?.is_day === 1 ? "☀️ Day" : "🌙 Night"}
-          </div>
-          <div className="absolute top-16 right-72 bg-orange-300 text-gray-800 font-bold rounded-lg shadow-md px-3 py-1 text-sm">
-            {formatedDate(HourlyData?.time_epoch)}
-          </div>
+        <div
+          className="flex flex-col bg-gradient-to-b from-blue-500 via-sky-400 to-slate-200 rounded-2xl shadow-lg p-4 w-full mx-auto relative overflow-hidden 
+      
+        "
+        >
+          <div>
+            {/* Floating Day/Night Badge */}
+            <div className="absolute top-16 right-3 bg-orange-300 text-gray-800 font-bold rounded-lg shadow-md px-3 py-1 text-sm">
+              {HourlyData?.is_day === 1 ? "☀️ Day" : "🌙 Night"}
+            </div>
 
-          {/* Time Selector */}
+            {/* current-date */}
+            <div className="absolute top-16 right-72 bg-orange-300 text-gray-800 font-bold rounded-lg shadow-md px-3 py-1 text-sm">
+              {formatedDate(HourlyData?.time_epoch)}
+            </div>
+          </div>
+          {/* Time Selector, current-button and overallday-button */}
           <div className="flex flex-row justify-between items-center mb-4">
             <button
               className="bg-blue-600 px-4 py-2 rounded-xl text-white text-sm font-semibold shadow hover:bg-blue-700 transition"
@@ -163,126 +225,172 @@ function HourlyData() {
               Overall Day
             </button>
           </div>
-
           {/* Weather Info */}
-          <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-            <div className="flex flex-col">
-              <p className="text-5xl font-bold text-white leading-tight">
-                {HourlyData?.temp_c}
-                <span className="text-2xl">°C</span>
-              </p>
-              <p className="text-lg text-white mt-2">
-                <span className="font-bold">Feels like:</span>{" "}
-                {HourlyData?.feelslike_c}
-                <span className="text-sm">°C</span>
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <img
-                className="w-20 h-20 drop-shadow-lg"
-                src={hourlyIcon}
-                alt="skyicon"
-              />
-              <p className="text-white font-semibold mt-2 text-sm">
-                {HourlyData?.condition.text}
-              </p>
-            </div>
-          </div>
-          {/* Humidity */}
-          <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-            <p className="text-2xl text-white font-bold">Humidity : </p>
-            <p className="text-2xl text-white font-bold">
-              {HourlyData?.humidity}%
-            </p>
-          </div>
-
-          {/* Cloudy */}
-          <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-            <p className="text-2xl text-white font-bold">Cloudy : </p>
-            <p className="text-2xl text-white font-bold">
-              {HourlyData?.cloud}%
-            </p>
-          </div>
-
-          {/* Snowy */}
-          {HourlyData?.will_it_snow ? (
-            <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-              <p className="text-4xl text-white font-bold">Snowy : </p>
-              <div className="flex flex-col justify-center items-center text-2xl text-white font-bold">
-                <p>{HourlyData?.chance_of_snow}%</p>
-                <p>{HourlyData?.will_it_snow ? "yes" : "no"}</p>
-                <p>{HourlyData?.snow_cm} cm</p>
+          {/* holder for temperature-temperature-feels-like, humudity-cloudy-precipitation-snowy-uv-index-etc and astros */}
+          <div className="xl:flex xl:flex-row xl:justify-evenly xl:gap-1 lg:flex lg:flex-row lg:justify-evenly lg:gap-[0.5rem] md:flex md:flex-row">
+            {/* temperature, temperature-feels like and skyicon | sky-condition text */}
+            <div
+              className={`flex flex-row justify-between items-center bg-white/20 rounded-2xl p-3 shadow-inner xl:flex-col xl:justify-around xl:p-8 ${widthControlxl(
+                width
+              )} lg:flex-col lg:justify-around ${widthControllg(width)}`}
+            >
+              {/* temperature and feels-like */}
+              <div className="flex flex-col ">
+                <p
+                  className={`text-5xl shadow-xl p-2 rounded-md ${shadow_for_temp(
+                    HourlyData?.temp_c
+                  )} font-bold text-white leading-tight xl:text-7xl lg:text-6xl`}
+                >
+                  {HourlyData?.temp_c}
+                  <span className="text-2xl xl:text-3xl lg:text-3xl">°C</span>
+                  {/* <p>width {width}</p> */}
+                </p>
+                <p className="text-lg text-white mt-2 xl:text-2xl lg:text-2xl">
+                  <span className="font-bold">Feels like:</span>{" "}
+                  <span className="font-bold">{HourlyData?.feelslike_c}</span>
+                  <span className="text-sm xl:font-bold lg:font-bold">°C</span>
+                </p>
+              </div>
+              {/* sky-icon and sky-conditional-text */}
+              <div className="flex flex-col items-center xl:justify-between">
+                <img
+                  className="w-20 h-20 drop-shadow-2xl xl:size-40 lg:size-36"
+                  src={hourlyIcon}
+                  alt="skyicon"
+                />
+                <p
+                  className="text-white font-semibold mt-2 text-sm xl:text-[1.7rem] xl:text-slate-600 xl:font-bold xl:shadow-inner xl:shadow-slate-400 xl:p-2
+                  lg:text-slate-500 lg:font-bold lg:shadow-inner lg:shadow-slate-400 lg:p-2
+                "
+                >
+                  {HourlyData?.condition.text}
+                </p>
               </div>
             </div>
-          ) : (
-            <div className="hidden"></div>
-          )}
+            {/* humidity cloudy snowy atmosphere visibility uv index,  wind speed precipitation */}
+            <div
+              className={`${widthControlxl(
+                width
+              )} xl:flex xl:flex-col xl:gap-[0.1rem] ${widthControllg(width)} `}
+            >
+              {/* Humidity */}
+              <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
+                <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg ">
+                  Humidity :{" "}
+                </p>
+                <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                  {HourlyData?.humidity}%
+                </p>
+              </div>
 
-          {/* Atmospheric Pressure */}
-          <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-            <p className="text-2xl text-white font-bold">Atm Pressure : </p>
-            <p className="flex flex-col  justify-center items-center text-2xl text-white font-bold">
-              <span>{HourlyData?.pressure_in} inHg</span>
-              <span>{HourlyData?.pressure_mb} mb</span>
-            </p>
-          </div>
-          {/* Visibility */}
-          <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-            <p className="text-2xl text-white font-bold">Visibility : </p>
-            <p className="flex flex-col justify-center items-center text-2xl text-white font-bold">
-              <span>{HourlyData?.vis_km} km</span>
-              <span>{HourlyData?.vis_miles} miles</span>
-            </p>
-          </div>
+              {/* Cloudy */}
+              <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
+                <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                  Cloudy :{" "}
+                </p>
+                <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                  {HourlyData?.cloud}%
+                </p>
+              </div>
 
-          {/* UV INdex */}
-          <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-            <p className=" text-xl text-white font-bold">UV-Index : </p>
-            <p className="flex flex-col justify-center items-center text-white font-semibold text-sm bg-slate-400 p-1 rounded-md">
-              <span>max at {formateTimeOfMaxEpoch(epoch_of_max_uv)}</span>
-              <span>{maxUV}</span>
-            </p>
-            <p className=" text-white font-bold">
-              <span className="text-lg">{HourlyData?.uv}</span> |{" "}
-              <span className="text-sm">{uvIndexState(HourlyData?.uv)}</span>
-            </p>
-          </div>
+              {/* Snowy */}
+              {HourlyData?.will_it_snow ? (
+                <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
+                  <p className="text-4xl text-white font-bold xl:text-xl lg:text-lg">
+                    Snowy :{" "}
+                  </p>
+                  <div className="flex flex-col justify-center items-center text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                    <p>{HourlyData?.chance_of_snow}%</p>
+                    <p>{HourlyData?.will_it_snow ? "yes" : "no"}</p>
+                    <p>{HourlyData?.snow_cm} cm</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="hidden"></div>
+              )}
 
-          {/* wind speed */}
-          <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-            <p className="text-2xl font-bold text-white">Wind : </p>
-            <p className="text-lg text-white font-bold">
-              {HourlyData?.wind_degree}&deg;
-            </p>
-            <p className="flex flex-col justify-center items-center text-xl text-white font-bold">
-              <span>{HourlyData?.wind_kph} km/h</span>{" "}
-              <span>{getWindFlowDirection(HourlyData?.wind_dir)}</span>
-            </p>
-          </div>
+              {/* Atmospheric Pressure */}
+              <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner lg:pt-2 lg:pb-2">
+                <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                  Atm Pressure :{" "}
+                </p>
+                <p className="flex flex-col  justify-center items-center text-2xl text-white font-bold xl:text-xl lg:text-lg ">
+                  <span>{HourlyData?.pressure_in} inHg</span>
+                  <span>{HourlyData?.pressure_mb} mb</span>
+                </p>
+              </div>
 
-          {/* Precipitation */}
+              {/* Visibility */}
+              <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner lg:pt-2 lg:pb-2">
+                <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                  Visibility :{" "}
+                </p>
+                <p className="flex flex-col justify-center items-center text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                  <span>{HourlyData?.vis_km} km</span>
+                  <span>{HourlyData?.vis_miles} miles</span>
+                </p>
+              </div>
 
-          {HourlyData?.will_it_rain ? (
-            <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
-              <p className="text-2xl text-white font-bold">
-                Rain :{" "}
-                <span className="text-lg font-bold">
-                  {HourlyData?.chance_of_rain} %
-                </span>{" "}
-              </p>
-              <p>
-                <span className="text-xl text-white font-bold">
-                  precip : {HourlyData?.precip_mm} mm |
-                </span>{" "}
-                <span className="font-bold text-lg text-white">
-                  {HourlyData?.will_it_rain ? "Yes" : "No"}
-                </span>
-              </p>
+              {/* UV INdex */}
+              <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner lg:pt-2 lg:pb-2">
+                <p className=" text-xl text-white font-bold xl:text-xl lg:text-lg">
+                  UV-Index :{" "}
+                </p>
+                <p className="flex flex-col justify-center items-center text-white font-semibold text-sm shadow-inner shadow-black p-1 rounded-md xl:text-sm lg:text-[0.7rem]">
+                  <span>max at {formateTimeOfMaxEpoch(epoch_of_max_uv)}</span>
+                  <span>{maxUV}</span>
+                </p>
+                <p className=" text-white font-bold ">
+                  <span className="text-lg xl:text-xl lg:text-lg">
+                    {HourlyData?.uv}
+                  </span>{" "}
+                  |{" "}
+                  <span className="text-sm xl:text-xl lg:text-lg">
+                    {uvIndexState(HourlyData?.uv)}
+                  </span>
+                </p>
+              </div>
+
+              {/* wind speed */}
+              <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner lg:pt-2 lg:pb-2">
+                <p className="text-2xl font-bold text-white xl:text-xl lg:text-lg">
+                  Wind :{" "}
+                </p>
+                <p className="text-lg text-white font-bold xl:text-xl lg:text-lg">
+                  {HourlyData?.wind_degree}&deg;
+                </p>
+                <p className="flex flex-col justify-center items-center text-xl text-white font-bold xl:text-xl lg:text-lg">
+                  <span>{HourlyData?.wind_kph} km/h</span>{" "}
+                  <span>{getWindFlowDirection(HourlyData?.wind_dir)}</span>
+                </p>
+              </div>
+
+              {/* Precipitation */}
+
+              {HourlyData?.will_it_rain ? (
+                <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner">
+                  <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg">
+                    Rain :
+                    <span className="text-lg font-bold xl:text-xl text-center lg:text-sm">
+                      {HourlyData?.chance_of_rain}%
+                    </span>{" "}
+                  </p>
+                  <p>
+                    <span className="text-xl text-white font-bold xl:text-xl lg:text-sm">
+                      precip : {HourlyData?.precip_mm} mm |
+                    </span>{" "}
+                    <span className="font-bold text-lg text-white xl:text-xl lg:text-sm">
+                      {HourlyData?.will_it_rain ? "Yes" : "No"}
+                    </span>
+                  </p>
+                </div>
+              ) : (
+                <div className="hidden"></div>
+              )}
             </div>
-          ) : (
-            <div className="hidden"></div>
-          )}
+            {/* current-day astros section */}
+            <DayAstros />
+          </div>
         </div>
       ) : (
         <OverallDayData />

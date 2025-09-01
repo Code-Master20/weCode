@@ -106,11 +106,11 @@ function DayAstros() {
           </p>
 
           <div className="flex flex-col items-center">
-            <p className="text-lg font-semibold text-white xl:text-xl xl:font-bold lg:text-sm lg:font-bold md:text-xs">
+            <p className="text-[1rem] font-semibold text-white xl:text-xl xl:font-bold lg:text-sm lg:font-bold md:text-xs">
               {currentDayAstros.moon_phase}(
               {moonPhases(currentDayAstros.moon_phase)})
             </p>
-            <p className="text-xl font-semibold text-white xl:text-xl xl:font-bold lg:text-sm lg:font-bold md:text-xs">
+            <p className="text-[1rem] font-semibold text-white xl:text-xl xl:font-bold lg:text-sm lg:font-bold md:text-xs">
               {moonIllumination(currentDayAstros.moon_illumination)}
             </p>
           </div>
