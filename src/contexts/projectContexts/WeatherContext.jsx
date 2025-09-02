@@ -4,7 +4,7 @@ export const WeatherContext = createContext();
 
 export default function WeatherProvider({ children }) {
   const [currentWeather, setCurrentWeather] = useState({});
-  const [location, setLocation] = useState("Bengaluru");
+  const [location, setLocation] = useState(null); // start as null
   const [previousValidLocation, setPreviousValidLocation] =
     useState("Bengaluru");
   const [error, setError] = useState(null);
@@ -14,15 +14,40 @@ export default function WeatherProvider({ children }) {
   const [twentyFourHourForecasting, setTwentyFourHourForecasting] = useState(
     {}
   );
+  const [geoError, setGeoError] = useState(null);
 
+  //The below code tracts current device location:latitude and longitude
   useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          setLocation(`${lat},${lon}`); // prefer device location
+        },
+        (err) => {
+          setGeoError(
+            "Please allow location access to see current weather of your area."
+          );
+          setLocation("Bengaluru"); // fallback if denied
+        }
+      );
+    } else {
+      setGeoError("Geolocation not supported in this browser.");
+      setLocation("Bengaluru"); // fallback if unsupported
+    }
+  }, []);
+
+  // Fetch weather whenever location changes
+  useEffect(() => {
+    if (!location) return; // wait until location is set
+
     const fetchWeatherData = async () => {
       try {
         const response = await fetch(
-          `https://api.weatherapi.com/v1/forecast.json?key=adf4dc20307142739ab25947250108&q=${location}&days=15`
+          `https://api.weatherapi.com/v1/forecast.json?key=adf4dc20307142739ab25947250108&q=${location}&days=5`
         );
 
-        // Check if the API returned an error
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error?.message || "Location not found");
@@ -36,16 +61,13 @@ export default function WeatherProvider({ children }) {
         setOverallDayForecasting(data.forecast.forecastday[0].day);
         setTwentyFourHourForecasting(data.forecast.forecastday[0].hour);
 
-        setTimeout(() => {
-          setError(null); // Clear any previous errors
-        }, 4000);
+        setTimeout(() => setError(null), 4000);
 
-        setPreviousValidLocation(location); // Store the valid location
+        setPreviousValidLocation(location);
       } catch (error) {
         setError("No Matching Location Found");
         console.error("Error fetching weather data:", error);
-        // Revert to the previous valid location
-        setLocation(previousValidLocation);
+        setLocation(previousValidLocation); // revert
       }
     };
 
@@ -70,6 +92,7 @@ export default function WeatherProvider({ children }) {
         overallDayForecasting,
         setOverallDayForecasting,
         previousValidLocation,
+        geoError,
       }}
     >
       {children}

@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 function WeatherApp() {
   const { localisedData, setLocalisedData, currentWeather } = useWeather();
   const [formatedTime, setFormatedTime] = useState("");
-
   useEffect(() => {
     function updateTime() {
       const date = new Date();
