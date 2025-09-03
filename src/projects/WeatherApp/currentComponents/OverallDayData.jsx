@@ -2,7 +2,7 @@ import { useWeather } from "../../../contexts/projectContexts/WeatherContext";
 import DayAstros from "./DayAstros";
 import { useNavigate } from "react-router-dom";
 import HourlyData from "./HourlyData";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function OverallDayData() {
   const navigate = useNavigate();
@@ -142,6 +142,79 @@ function OverallDayData() {
     return "bg-slate-400";
   }
 
+  // screen-width tracker
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth); // update state with new width
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // bgHumidity for different humidity percentages
+
+  function bgHumidity(humi) {
+    if (humi > 80) {
+      return "bg-purple-700";
+    } else if (humi > 60) {
+      return "bg-blue-300";
+    } else if (humi > 40) {
+      return "bg-teal-300";
+    } else if (humi > 20) {
+      return "bg-green-200";
+    } else if (humi > 0) {
+      return "bg-yellow-200";
+    }
+  }
+
+  //bgVisibility for different visible distances
+  function bgVisibility(visible) {
+    if (visible > 10) {
+      return "bg-gray-100";
+    } else if (visible > 5) {
+      return "bg-gray-300";
+    } else if (visible > 3) {
+      return "bg-gray-500";
+    } else if (visible > 1) {
+      return "bg-gray-700";
+    }
+  }
+  console.log(currentWeather?.uv);
+  //bgUVIndex for different uv index values
+  function bgUVIndex(uv) {
+    if (uv > 10) {
+      return "bg-purple-800";
+    } else if (uv >= 8) {
+      return "bg-red-600";
+    } else if (uv >= 6) {
+      return "bg-orange-500";
+    } else if (uv >= 3) {
+      return "bg-yellow-400";
+    } else if (uv >= 0) {
+      return "bg-green-400";
+    }
+  }
+
+  function width_control_xl(width) {
+    if (width > 1370) {
+      return "xl:min-w-[27rem]";
+    } else if (width > 1360) {
+      return "xl:min-w-[26.6rem]";
+    } else if (width > 1330) {
+      return "xl:min-w-[26rem]";
+    } else if (width > 1300) {
+      return "xl:min-w-[25.8rem]";
+    } else if (width > 1280) {
+      return "xl:min-w-[25rem]";
+    }
+  }
+
   return (
     <>
       {isHourly ? (
@@ -179,38 +252,51 @@ function OverallDayData() {
 
           {/* Temperature data */}
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 xl:flex-row xl:justify-between xl:pl-2 xl:pr-2">
             <div
               className={`flex flex-row justify-between items-center p-2 rounded-md ${bgTemperatureAccordingly(
                 currentForecastingObj?.temp_c,
                 currentForecastingObj?.will_it_rain,
                 currentForecastingObj?.is_day
-              )}`}
+              )} xl:flex-col xl:justify-around ${width_control_xl(width)}`}
             >
               <div className="flex flex-col justify-between items-center gap-2">
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-bold text-white xl:text-5xl">
                   {minTemp(currentWeather?.temp_c)}&deg;C-
                   {maxTemp(currentWeather?.temp_c)}&deg;C
                 </p>
-                <p className="font-semibold text-white text-xl">
+                <p className="font-semibold text-white text-xl xl:text-4xl xl:font-bold">
                   <span>currTemp:</span>
                   <span> {currentWeather.temp_c}</span>
                   <span className="text-xl font-semibold text-white">
                     &deg;C
                   </span>
                 </p>
+                <p>width : {width}</p>
               </div>
               <div className="flex flex-col items-center">
-                <img className="size-32" src={iconOfOverAllday} alt="icon" />
-                <p className="text-sm font-semibold text-white">
+                <img
+                  className="size-32 xl:size-48"
+                  src={iconOfOverAllday}
+                  alt="icon"
+                />
+                <p className="text-sm font-semibold text-white xl:text-2xl">
                   {overallDayForecasting.condition.text}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-col gap-2  bg-slate-600 rounded-md p-2">
+            <div
+              className={`flex flex-col gap-2  bg-slate-600 rounded-md p-2 ${width_control_xl(
+                width
+              )}`}
+            >
               {/* Humidity */}
-              <div className="flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg bg-slate-400">
+              <div
+                className={`flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg ${bgHumidity(
+                  currentWeather?.humidity
+                )}`}
+              >
                 <p className="text-white font-semibold text-2xl">Humidity:</p>
                 <p className="flex flex-col items-end">
                   <span className="text-white font-semibold text-2xl">
@@ -228,7 +314,11 @@ function OverallDayData() {
                 </p>
               </div>
               {/* Visibility */}
-              <div className="flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg bg-slate-400">
+              <div
+                className={`flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg ${bgVisibility(
+                  currentWeather?.vis_km
+                )}`}
+              >
                 <p className="text-white font-semibold text-2xl">
                   Visibility<span className="text-sm">avg</span>:
                 </p>
@@ -238,7 +328,11 @@ function OverallDayData() {
                 </p>
               </div>
               {/* UV Index */}
-              <div className="flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg bg-slate-400">
+              <div
+                className={`flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg ${bgUVIndex(
+                  currentWeather?.uv
+                )} `}
+              >
                 <p className="text-white font-semibold text-2xl">
                   UV<span className="text-xs">max</span> :
                 </p>
@@ -260,7 +354,17 @@ function OverallDayData() {
                 </p>
               </div>
               {/* Wind Speed */}
-              <div className="flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg bg-slate-400">
+              <div
+                className={`flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg 
+    bg-gradient-to-r from-gray-300 via-slate-600 to-slate-300 
+    animate-wind bg-[length:200%_100%]`}
+                style={{
+                  animationDuration: `${Math.max(
+                    21 - Math.floor(currentWeather?.wind_kph ?? 0), // faster for higher wind
+                    3 // min 3s so it doesn’t go crazy fast
+                  )}s`,
+                }}
+              >
                 <p className="text-white font-semibold text-2xl">
                   Wind<span className="text-xs">max</span> :
                 </p>
@@ -268,6 +372,7 @@ function OverallDayData() {
                   {overallDayForecasting.maxwind_kph} km/h
                 </p>
               </div>
+
               {/* rain Possibility */}
               {overallDayForecasting.daily_will_it_rain ? (
                 <div className="flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg bg-slate-400">
