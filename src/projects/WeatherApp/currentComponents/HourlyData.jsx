@@ -359,19 +359,19 @@ function HourlyData() {
 
               {/* UV INdex */}
               <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner lg:pt-2 lg:pb-2 md:p-2 md:rounded-md">
-                <p className=" text-xl text-white font-bold xl:text-xl lg:text-lg md:text-sm">
+                <p className=" text-xl text-white font-bold xl:text-xl lg:text-[1.1rem] md:text-[0.75rem]">
                   UV-Index :{" "}
                 </p>
-                <p className="flex flex-col justify-center items-center text-white font-semibold text-sm shadow-inner shadow-black p-1 rounded-md xl:text-sm lg:text-[0.7rem] md:text-xs">
+                <p className="flex flex-col justify-center items-center text-white font-semibold text-sm shadow-inner shadow-black p-1 rounded-md xl:text-sm lg:text-[0.7rem] md:text-[0.5rem]">
                   <span>max at {formateTimeOfMaxEpoch(epoch_of_max_uv)}</span>
                   <span>{maxUV}</span>
                 </p>
                 <p className=" text-white font-bold ">
-                  <span className="text-lg xl:text-xl lg:text-lg md:text-sm">
+                  <span className="text-lg xl:text-xl lg:text-[1.1rem] md:text-xs">
                     {HourlyData?.uv}
                   </span>{" "}
                   |{" "}
-                  <span className="text-sm xl:text-xl lg:text-lg md:text-sm">
+                  <span className="text-sm xl:text-xl lg:text-[1.1rem] md:text-xs">
                     {uvIndexState(HourlyData?.uv)}
                   </span>
                 </p>
@@ -397,7 +397,7 @@ function HourlyData() {
                 <div className="flex flex-row justify-between items-center bg-white/20 rounded-2xl p-4 shadow-inner md:p-2 md:rounded-md">
                   <p className="text-2xl text-white font-bold xl:text-xl lg:text-lg md:text-sm">
                     Rain :
-                    <span className="text-lg font-bold xl:text-xl text-center lg:text-sm md:text-sm">
+                    <span className="text-lg font-bold xl:text-xl text-center lg:text-sm md:text-xs">
                       {HourlyData?.chance_of_rain}%
                     </span>{" "}
                   </p>
