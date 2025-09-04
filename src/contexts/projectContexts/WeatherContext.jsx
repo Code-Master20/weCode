@@ -59,7 +59,7 @@ export default function WeatherProvider({ children }) {
         setCurrentDayAstros(data.forecast.forecastday[0].astro);
         setLocalisedData(data.location);
         setOverallDayForecasting(data.forecast.forecastday[0].day);
-        setTwentyFourHourForecasting(data.forecast.forecastday[0].hour);
+        setTwentyFourHourForecasting(data?.forecast?.forecastday[0]?.hour);
 
         setTimeout(() => setError(null), 4000);
 

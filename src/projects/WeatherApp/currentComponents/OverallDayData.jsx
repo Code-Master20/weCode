@@ -201,6 +201,15 @@ function OverallDayData() {
     }
   }
 
+  //Animation for wind-div
+  function getWindAnimationSpeed(windKph) {
+    if (windKph > 50) return "1s ease-in"; // Very windy - fast animation
+    if (windKph > 30) return "2s ease-in"; // Windy - medium fast
+    if (windKph > 15) return "3s ease-in"; // Breezy - normal
+    if (windKph > 5) return "5s ease-in"; // Light breeze - slow
+    return "8s ease-in"; // Calm - very slow
+  }
+
   function width_control_xl(width) {
     if (width > 1370) {
       return "xl:min-w-[27rem]";
@@ -356,13 +365,13 @@ function OverallDayData() {
               {/* Wind Speed */}
               <div
                 className={`flex flex-row justify-between items-center py-1 px-2 border-2 border-blue-300 rounded-lg 
-    bg-gradient-to-r from-gray-300 via-slate-600 to-slate-300 
-    animate-wind bg-[length:200%_100%]`}
+                          bg-gradient-to-tr from-red-300 via-blue-200 to-blue-400 bg-[length:200%_100%]
+                       animate-wind-flow
+                      `}
                 style={{
-                  animationDuration: `${Math.max(
-                    21 - Math.floor(currentWeather?.wind_kph ?? 0), // faster for higher wind
-                    3 // min 3s so it doesn’t go crazy fast
-                  )}s`,
+                  animationDuration: getWindAnimationSpeed(
+                    currentWeather?.wind_kph || 0
+                  ),
                 }}
               >
                 <p className="text-white font-semibold text-2xl">

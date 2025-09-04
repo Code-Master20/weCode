@@ -1,21 +1,22 @@
 // tailwind.config.js
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      keyframes: {
-        wind: {
-          // "0%, 102%": { backgroundPosition: "0% 20%" },
-          "50%": { backgroundPosition: "100% 10%" },
-        },
-      },
       animation: {
-        wind: "wind linear infinite",
+        "wind-flow": "wind-flow 3s linear infinite",
+      },
+      keyframes: {
+        "wind-flow": {
+          "0%": {
+            "background-position": "100% 50%", // Start from right
+          },
+          "100%": {
+            "background-position": "0% 50%", // Smoothly move to left
+          },
+        },
       },
     },
   },
   plugins: [],
-}
+};

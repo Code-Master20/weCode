@@ -128,23 +128,6 @@ function CurrentWeather() {
     return "Extreme";
   }
 
-  // Gradient backgrounds for wind
-  function getWindBackground(windKph) {
-    if (windKph <= 10) {
-      // Calm
-      return "linear-gradient(to top, #e0f7fa, #80deea)"; // light cyan
-    } else if (windKph <= 30) {
-      // Moderate
-      return "linear-gradient(to top, #b2fefa, #0ed2f7)"; // aqua blue
-    } else if (windKph <= 60) {
-      // Strong
-      return "linear-gradient(to top, #f7971e, #ffd200)"; // yellow-orange
-    } else {
-      // Storm
-      return "linear-gradient(to top, #373b44, #4286f4)"; // dark stormy
-    }
-  }
-
   // Function for humidity backgrounds
   function getHumidityBackground(humidity) {
     if (humidity < 30) {
@@ -195,31 +178,6 @@ function CurrentWeather() {
     }
   }
 
-  // background gradient for different cloud percentages
-  function getCloudBackground(cloud) {
-    if (cloud <= 10) {
-      // Clear sky
-      return "linear-gradient(to top, #56ccf2, #2f80ed)";
-      // bright blue sky
-    } else if (cloud <= 40) {
-      // Few clouds
-      return "linear-gradient(to top, #a1c4fd, #c2e9fb)";
-      // soft blue with light white
-    } else if (cloud <= 70) {
-      // Partly cloudy
-      return "linear-gradient(to top, #d7d2cc, #304352)";
-      // grayish-blue
-    } else if (cloud <= 90) {
-      // Mostly cloudy
-      return "linear-gradient(to top, #757f9a, #d7dde8)";
-      // strong gray tones
-    } else {
-      // Overcast (100%)
-      return "linear-gradient(to top, #232526, #414345)";
-      // dark gray stormy
-    }
-  }
-
   // background gradient for different atmospheric pressures
   function getPressureBackground(pressure) {
     if (pressure < 990) {
@@ -265,30 +223,6 @@ function CurrentWeather() {
     }
   }
 
-  function getPrecipitationBackground(precipMM) {
-    if (precipMM === 0) {
-      // No rain
-      return "linear-gradient(to top, #56ccf2, #2f80ed)";
-      // clear blue sky
-    } else if (precipMM <= 2.5) {
-      // Light rain
-      return "linear-gradient(to top, #89f7fe, #66a6ff)";
-      // light blue / gentle rain
-    } else if (precipMM <= 7.5) {
-      // Moderate rain
-      return "linear-gradient(to top, #4facfe, #00f2fe)";
-      // medium blue
-    } else if (precipMM <= 50) {
-      // Heavy rain
-      return "linear-gradient(to top, #667db6, #0082c8, #0082c8, #667db6)";
-      // darker rainy blue
-    } else {
-      // Extreme rainfall
-      return "linear-gradient(to top, #373B44, #4286f4)";
-      // stormy dark gradient
-    }
-  }
-
   function getSnowBackground(snowFlag) {
     if (snowFlag === 1) {
       return "linear-gradient(to top, #c9d6ff, #e2e2e2)";
@@ -299,6 +233,71 @@ function CurrentWeather() {
     }
   }
 
+  //Animation for wind-div
+  function getWindAnimationSpeed(windKph) {
+    if (windKph > 50) return "1s ease-in"; // Very windy - fast animation
+    if (windKph > 30) return "2s ease-in"; // Windy - medium fast
+    if (windKph > 15) return "3s ease-in"; // Breezy - normal
+    if (windKph > 5) return "5s ease-in"; // Light breeze - slow
+    return "8s ease-in"; // Calm - very slow
+  }
+
+  const [isRain, setIsrain] = useState(null);
+  function getCurrentHourEpoch() {
+    const date = new Date(); // current time
+    date.setMinutes(0, 0, 0); // reset minutes, seconds, milliseconds → 00:00:00
+    return Math.floor(date.getTime() / 1000); // convert ms → seconds
+  }
+
+  const hourEpoch = getCurrentHourEpoch();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const obj = twentyFourHourForecasting.find(
+        (hour) => hour.time_epoch == hourEpoch
+      ).will_it_rain;
+
+      setIsrain(obj);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [twentyFourHourForecasting, hourEpoch]);
+
+  function getRainAnimationSpeed(isRain, rainPrecip) {
+    // Handle undefined/null values during loading
+    if (isRain === null || isRain === undefined) {
+      return "6s ease-in"; // Default while loading
+    }
+
+    // Handle invalid precipitation values
+    if (rainPrecip === null || rainPrecip === undefined || rainPrecip < 0) {
+      rainPrecip = 0; // Set to 0 if invalid
+    }
+
+    if (!isRain) return "6s ease-in";
+    if (rainPrecip === 0) return "6s ease-in"; // No rain
+    if (rainPrecip < 0.1) return "5s ease-in"; // Very light rain
+    if (rainPrecip < 0.3) return "4s ease-in"; // Light rain
+    if (rainPrecip < 0.5) return "3s ease-in"; // Moderate rain
+    if (rainPrecip < 1.0) return "2s ease-in"; // Heavy rain
+    return "1s ease-in"; // Very heavy rain
+  }
+
+  function getCloudAnimationSpeed(cloud) {
+    // Handle undefined/null values
+    if (cloud === null || cloud === undefined) {
+      return "8s ease-in"; // Default while loading
+    }
+
+    // Cloud percentage-based animation speeds (0-100%)
+    if (cloud === 0) return "0s ease-in"; // Clear sky - no animation
+    if (cloud <= 10) return "20s ease-in"; // Few clouds - very slow drift
+    if (cloud <= 25) return "15s ease-in"; // Scattered clouds - slow
+    if (cloud <= 40) return "12s ease-in"; // Partly cloudy - moderate slow
+    if (cloud <= 60) return "8s ease-in"; // Mostly cloudy - normal
+    if (cloud <= 75) return "6s ease-in"; // Broken clouds - moderate fast
+    if (cloud <= 90) return "4s ease-in"; // Overcast - fast movement
+    return "2s ease-in"; // Dense overcast - very fast
+  }
   return (
     <>
       {/* at very first isHourly=true and isOverallDay=false so HourlyData component will be rendered
@@ -455,11 +454,12 @@ function CurrentWeather() {
 
               {/* wind-speed */}
               <div
-                className="flex flex-row justify-between items-center p-3 shadow-xl rounded-md md:pt-1 md:pb-1"
+                className={`flex flex-row justify-between items-center p-3 shadow-xl rounded-md md:pt-1 md:pb-1 bg-[length:200%_100%]
+                   animate-wind-flow bg-gradient-to-tr from-red-300 via-blue-200 to-blue-400`}
                 style={{
-                  backgroundImage: getWindBackground(currentWeather?.wind_kph),
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
+                  animationDuration: getWindAnimationSpeed(
+                    currentWeather?.wind_kph || 0
+                  ),
                 }}
               >
                 <p className="text-white text-2xl font-semibold lg:text-xl md:text-sm">
@@ -503,16 +503,19 @@ function CurrentWeather() {
 
               {/* cloud cover */}
               <div
-                className="flex flex-row justify-between items-center shadow-xl p-3 rounded-md md:pt-2 md:pb -2"
+                className={`flex flex-row justify-between items-center shadow-xl p-3 rounded-md md:pt-2 md:pb -2 
+                  bg-gradient-to-tl from-gray-400 via-slate-50 to-blue-300
+                  bg-[length:300%_300%] animate-wind-flow`}
                 style={{
-                  background: getCloudBackground(currentWeather?.cloud),
-                  color: "white",
+                  animationDuration: getCloudAnimationSpeed(
+                    currentWeather?.cloud || 0
+                  ),
                 }}
               >
-                <p className="text-white text-2xl font-semibold md:text-sm">
+                <p className="text-slate-500 text-2xl font-semibold xl:text-xl md:text-sm">
                   Cloudy:
                 </p>
-                <p className="text-white text-2xl font-semibold lg:text-lg md:text-sm">
+                <p className="text-slate-400 text-2xl font-semibold xl:text-xl lg:text-lg md:text-sm">
                   {currentWeather?.cloud}%
                 </p>
               </div>
@@ -559,12 +562,14 @@ function CurrentWeather() {
 
               {currentWeather?.precip_mm ? (
                 <div
-                  className="flex flex-row justify-between items-center p-3 shadow-xl rounded-md md:pt-1 md:pb-1"
+                  className={`flex flex-row justify-between items-center p-3 shadow-xl rounded-md md:pt-1 md:pb-1 bg-gradient-to-tl from-lime-400 via-zinc-300 to-green-500
+                   bg-[length:300%_300%] animate-wind-flow
+                    `}
                   style={{
-                    background: getPrecipitationBackground(
-                      currentWeather?.precip_mm
+                    animationDuration: getRainAnimationSpeed(
+                      isRain,
+                      currentWeather?.precip_in
                     ),
-                    color: "white",
                   }}
                 >
                   <p className="text-white text-2xl font-semibold xl:text-xl xl:font-bold lg:text-xl lg:font-bold md:text-sm">
@@ -575,7 +580,7 @@ function CurrentWeather() {
                   lg:flex lg:flex-col lg:justify-between lg:items-center md:text-sm "
                   >
                     <span className="lg:text-xl self-end">
-                      {currentWeather?.precip_mm} mm{" "}
+                      {currentWeather?.precip_in} in{" "}
                     </span>
                     <span className="text-sm lg:text-xl md:text-xs ">
                       {rainPossibilityTracker()}
