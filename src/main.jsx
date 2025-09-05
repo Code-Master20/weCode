@@ -20,7 +20,7 @@ import CompletedTodos from "./projects/TodoApp/CompletedTodos.jsx";
 import CurrencySwap from "./projects/CurrencySwap/CurrencySwap.jsx";
 import WeatherApp from "./projects/WeatherApp/WeatherApp.jsx";
 import CurrentWeather from "./projects/WeatherApp/CurrentWeather.jsx";
-import FourteenDayForecast from "./projects/WeatherApp/FourteenDayForecast.jsx";
+import ThreeDaysForecast from "./projects/WeatherApp/ThreeDaysForecast.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,7 +43,7 @@ const router = createBrowserRouter(
           <Route index element={<Navigate to="current-weather" replace />} />
 
           <Route path="current-weather" element={<CurrentWeather />} />
-          <Route path="forecast-14d" element={<FourteenDayForecast />} />
+          <Route path="3day-forecast" element={<ThreeDaysForecast />} />
         </Route>
 
         <Route path="currency" element={<CurrencySwap />} />

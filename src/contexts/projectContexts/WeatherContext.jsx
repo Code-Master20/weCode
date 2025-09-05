@@ -14,6 +14,8 @@ export default function WeatherProvider({ children }) {
   const [twentyFourHourForecasting, setTwentyFourHourForecasting] = useState(
     {}
   );
+
+  const [threeDaysForecast, setThreeDaysForecast] = useState([]);
   const [geoError, setGeoError] = useState(null);
 
   //The below code tracts current device location:latitude and longitude
@@ -45,7 +47,7 @@ export default function WeatherProvider({ children }) {
     const fetchWeatherData = async () => {
       try {
         const response = await fetch(
-          `https://api.weatherapi.com/v1/forecast.json?key=adf4dc20307142739ab25947250108&q=${location}&days=5`
+          `https://api.weatherapi.com/v1/forecast.json?key=adf4dc20307142739ab25947250108&q=${location}&days=3`
         );
 
         if (!response.ok) {
@@ -60,7 +62,8 @@ export default function WeatherProvider({ children }) {
         setLocalisedData(data.location);
         setOverallDayForecasting(data.forecast.forecastday[0].day);
         setTwentyFourHourForecasting(data?.forecast?.forecastday[0]?.hour);
-
+        // console.log(data?.forecast?.forecastday);
+        setThreeDaysForecast(data?.forecast?.forecastday);
         setTimeout(() => setError(null), 4000);
 
         setPreviousValidLocation(location);
@@ -93,6 +96,7 @@ export default function WeatherProvider({ children }) {
         setOverallDayForecasting,
         previousValidLocation,
         geoError,
+        threeDaysForecast,
       }}
     >
       {children}

@@ -52,7 +52,7 @@ function WeatherHeader() {
           </NavLink>
 
           <NavLink
-            to="/projects/weather/forecast-14d"
+            to="/projects/weather/3day-forecast"
             className={({ isActive }) =>
               `text-lg font-semibold tracking-wide transition-all duration-200 py-2 px-4 rounded-lg
                ${
@@ -62,7 +62,7 @@ function WeatherHeader() {
                }`
             }
           >
-            14D Forecast
+            3Day-Forecast
           </NavLink>
         </div>
 
@@ -93,7 +93,7 @@ function WeatherHeader() {
           </NavLink>
 
           <NavLink
-            to="/projects/weather/forecast-14d"
+            to="/projects/weather/3day-forecast"
             className={({ isActive }) =>
               `text-lg font-semibold tracking-wide transition-all duration-200 py-2 px-4 rounded-lg my-1
                ${
@@ -104,7 +104,7 @@ function WeatherHeader() {
             }
             onClick={() => setMenuOpen(false)}
           >
-            14D Forecast
+            3Day-Forecast
           </NavLink>
         </div>
 

@@ -366,14 +366,22 @@ function OverallDayData() {
                   currentWeather?.vis_km
                 )} xl:py-2 xl:px-3 xl:rounded-xl lg:py-1 lg:px-2 lg:rounded-lg md:py-1 md:px-1 md:rounded-md`}
               >
-                <p className="text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg">
+                <p
+                  className={`text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg ${
+                    width > 768 && width < 860 ? "md:text-sm" : "md-text-lg"
+                  }`}
+                >
                   Visibility
                   <span className="text-sm xl:text-base lg:text-sm md:text-xs">
                     avg
                   </span>
                   :
                 </p>
-                <p className="text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg">
+                <p
+                  className={`text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg ${
+                    width > 768 && width < 860 ? "md:text-sm" : "md-text-lg"
+                  }`}
+                >
                   {overallDayForecasting.avgvis_km} km |{" "}
                   {overallDayForecasting.avgvis_miles} miles
                 </p>
@@ -392,16 +400,30 @@ function OverallDayData() {
                   </span>{" "}
                   :
                 </p>
-                <p className="text-xl text-white font-semibold xl:text-xl lg:text-lg md:text-base">
+                <p
+                  className={`text-xl text-white font-semibold xl:text-xl lg:text-lg md:text-base  ${
+                    width > 768 && width < 860 ? "md:text-sm" : "md-text-base"
+                  }`}
+                >
                   at {formatedTime(timeEpochOfMaxUV)}
                 </p>
                 <p className="flex flex-col items-end xl:gap-1 lg:gap-0 md:gap-0">
-                  <span className="text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg">
+                  <span
+                    className={`text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg  ${
+                      width > 768 && width < 860 ? "md:text-sm" : "md-text-lg"
+                    }`}
+                  >
                     {maxUVIndex}
                   </span>
 
                   {currentWeather.uv ? (
-                    <span className="text-white font-semibold text-xl xl:text-xl lg:text-lg md:text-base">
+                    <span
+                      className={`text-white font-semibold text-xl xl:text-xl lg:text-lg md:text-base  ${
+                        width > 768 && width < 860
+                          ? "md:text-sm"
+                          : "md-text-base"
+                      }`}
+                    >
                       currUV : {currentWeather.uv}
                     </span>
                   ) : (
@@ -446,10 +468,18 @@ function OverallDayData() {
                     ),
                   }}
                 >
-                  <p className="text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg">
+                  <p
+                    className={`text-white font-semibold text-2xl xl:text-2xl lg:text-xl md:text-lg ${
+                      width > 768 && width < 860 ? "md:text-sm" : "md-text-lg"
+                    }`}
+                  >
                     Rain Possibility:
                   </p>
-                  <p className="text-white font-semibold text-xl xl:text-xl lg:text-lg md:text-base">
+                  <p
+                    className={`text-white font-semibold text-xl xl:text-xl lg:text-lg md:text-base ${
+                      width > 768 && width < 860 ? "md:text-sm" : "md:text-base"
+                    } `}
+                  >
                     {overallDayForecasting.daily_chance_of_rain}% |{" "}
                     {overallDayForecasting.daily_will_it_rain
                       ? "rain-yes"
