@@ -7,7 +7,7 @@ export default function CurrencyRateProvider({ children }) {
 
   const [referenceCountry, setReferenceCountry] = useState("USD");
   const [countryCodes, setCountryCodes] = useState([]);
-  const [convertedCurrencyRates, setConvertedCurrencyRates] = useState([]);
+  const [convertedCurrencyRates, setConvertedCurrencyRates] = useState({});
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,7 +29,7 @@ export default function CurrencyRateProvider({ children }) {
 
         if (jsResponse.result === "success") {
           setCountryCodes(Object.keys(jsResponse.conversion_rates));
-          setConvertedCurrencyRates(Object.values(jsResponse.conversion_rates));
+          setConvertedCurrencyRates(jsResponse.conversion_rates);
         } else {
           throw new Error("Currency API returned error");
         }
@@ -47,6 +47,7 @@ export default function CurrencyRateProvider({ children }) {
   return (
     <CurrencyRateContext.Provider
       value={{
+        referenceCountry,
         setReferenceCountry,
         convertedCurrencyRates,
         countryCodes,
