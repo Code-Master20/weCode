@@ -17,8 +17,6 @@ function CurrencySwap() {
   const [toCurrency, setToCurrency] = useState("INR");
   const [toValue, setToValue] = useState(0);
 
-  document.body.style.backgroundColor = "#93c5fd";
-
   useEffect(() => {
     setReferenceCountry(fromCurrency);
     // insuring, no negative value input is allowd
@@ -55,7 +53,12 @@ function CurrencySwap() {
   // Fix for the NaN error
 
   return (
-    <div className="min-h-[79vh] flex items-center justify-center p-4">
+    <div
+      className="min-h-[79vh] flex items-center justify-center p-4"
+      style={{
+        backgroundColor: "#93c5fd",
+      }}
+    >
       <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">
           Currency Converter
